@@ -35,7 +35,7 @@ Thief.prototype.ProcessInput = function () {};
  */
 Thief.prototype.Draw = function (c) {
     c.save();
-
+    
     c.restore();
 
 };

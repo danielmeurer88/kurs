@@ -17,14 +17,15 @@ function DoggyGUI() {
     };
     
     this.Pics = {
-        Background : {complete:false},
-        Chest : {complete:false}
-        
+        Background : {complete:false}
     };
     
     this.Round = 0;
     
     this.Dog = {};
+    this.Chest = {};
+    this.Person = {};
+    this._nextActionCreation = 0;
     
 this.Initialize();
 }
@@ -39,11 +40,14 @@ DoggyGUI.prototype.constructor = DoggyGUI;
 DoggyGUI.prototype.Initialize = function () {
 
     this.Pics.Background = this.Engine.MediaManager.GetImage("background");
-    this.Pics.Chest = this.Engine.MediaManager.GetImage("chest");
-
+    
     this.Engine.SetSelectedObject(this);
-    this.Dog = new Dog(this);
-
+    this.Dog = new Dog();
+    this.Chest = new Chest();
+    this.Person = Person.GetNobody();
+    
+    this._nextActionCreation = Random.GetNumber(4, 7);
+    
     this.Button.Start = new Button({
         X:10, Y: this.Height - 50, Width:180, Height:40,
         Label : "Start",
@@ -99,6 +103,9 @@ DoggyGUI.prototype.Update = function () {
     this.Button.Pause.Update();
     this.Button.Step.Update();
     
+    this.Chest.Update();
+    this.Person.Update();
+    
     if(this._running){
         if(this._ts_lastround + this.DOR <= Date.now()){
             this._doSingleRound();
@@ -115,6 +122,9 @@ DoggyGUI.prototype.ProcessInput = function () {
     this.Button.Start.ProcessInput();
     this.Button.Pause.ProcessInput();
     this.Button.Step.ProcessInput();
+    
+    this.Chest.ProcessInput();
+    this.Person.ProcessInput();
 };
 
 /**
@@ -129,8 +139,8 @@ DoggyGUI.prototype.Draw = function (c) {
     if(this.Pics.Background.complete)
         c.drawImage(this.Pics.Background, 0, 0, this.Pics.Background.width*0.8, this.Pics.Background.height*0.8);
     
-    if(this.Pics.Chest.complete)
-        c.drawImage(this.Pics.Chest, 218, 260, this.Pics.Chest.width*0.8, this.Pics.Chest.height*0.8);
+    this.Chest.Draw(c);
+    this.Person.Draw(c);
     
     // drawing dog
     this.Dog.Draw(c);
@@ -192,5 +202,64 @@ DoggyGUI.prototype._doSingleRound = function () {
     this._ts_lastround = Date.now();
     this.Round++;
     
-    this.Dog.DoSingleRound();
+    this.Dog.DoSingleRound(); // dog needs to be first in order to be able to prevent stealing
+    this.Person.DoSingleRound();
+    this.PersonCreation();
+};
+
+DoggyGUI.prototype._getPerson = function () {
+    
+    var p = this.Person;
+    if(p.Position >= 1) return p;
+    
+    return Person.GetNobody();
+};
+
+DoggyGUI.prototype.Lose = function () {
+    var txt = "----> Du hast bis Runde " + this.Round + " durgehalten.";
+    this._log(txt);    
+    
+    this._running = false;
+    
+    var cbo = function(){
+        var txt = "Reset-Feature not yet implemented. Please reload";
+        console.log("OOOOOO - " + txt);
+        new Alert(txt).Start();
+        
+    }.getCallbackObject(this);
+    
+    new Confirm([txt, "", "M{oe}chtest du noch einmal?".decodeURI()], cbo).Start();
+};
+
+DoggyGUI.prototype.PersonCreation = function () {
+    // check if the current round is ready for an Action (for a new person to appear)
+    if(this.Round < this._nextActionCreation) return false;
+    
+    //if there is a person than end function
+    if(this.Person.Position > 0) return false;
+    
+    var labels = ["Nothing", "SmallChild", "TallChild", "Thief"];
+    var chances = [40, 25, 20, 15];
+    var lot = Random.DrawLot(labels, chances);
+    
+    this._log("--- "+ lot + " was created");
+    
+    if(lot === "SmallChild"){
+        //this.Person = new SmallChild();
+        /*testing*/this.Person = new Person();
+    }
+    
+    if(lot === "TallChild"){
+        //this.Person = new TallChild();
+        /*testing*/this.Person = new Person();
+    }
+    
+    if(lot === "Thief"){
+        //this.Person = new Thief();
+        /*testing*/this.Person = new Person();
+    }
+        
+//    if(lot !== "Nothing")
+//        this._nextActionCreation = this.Round + Random.GetNumber(4, 7);
+    
 };
