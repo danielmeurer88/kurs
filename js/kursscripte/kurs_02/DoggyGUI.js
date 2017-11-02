@@ -26,7 +26,8 @@ function DoggyGUI() {
     this.Chest = {};
     this.Person = {};
     this._nextCreation = 0;
-    
+    this._gameOver = false;
+        
 this.Initialize();
 }
 
@@ -229,11 +230,18 @@ DoggyGUI.prototype.Draw = function (c) {
     this.Button.Step.Draw(c);
 };
 
-DoggyGUI.prototype._log = function (txt) {
+DoggyGUI.prototype._log = function (txt, header) {
+    header = 3; // size of text: 3 = normal, 2 = slightly bigger, 1 = big, 0 = Start, End    
     console.log(txt);
+    
+    if(typeof logArray === "undefined") return;
+    logArray.push({txt:txt, header:header});
 };
 
 DoggyGUI.prototype._doSingleRound = function () {
+    
+    if(this._gameOver) return;
+    
     this._log("+++ Runde: " + (this.Round+1));    
     this._ts_lastround = Date.now();
     this.Round++;
@@ -258,6 +266,7 @@ DoggyGUI.prototype.Lose = function () {
     this._log(txt);    
     
     this._running = false;
+    this._gameOver = true;
     
     var cbo = function(){
         var txt = "Reset-Feature not yet implemented. Please reload!";
@@ -317,5 +326,30 @@ DoggyGUI.prototype.GiveDog = function (what, num) {
         this.Dog._hunger += num;
         forceRange(this.Dog,"_hunger", 0,100);
     }
+    
+};
+
+DoggyGUI.prototype.FastForward = function (rounds) {
+
+	var breakend = 5000;
+	var tillEnd = false;
+	var i=0;
+	
+	if(isNaN(rounds)){
+		tillEnd = true;
+	}
+	
+	if(tillEnd){
+		
+		while(!this._gameOver && i<breakend){
+			this._doSingleRound();
+			i++;
+		}
+		
+	}else{
+		for(i=0; i<rounds && i<breakend; i++)
+			this._doSingleRound();
+	}
+	
     
 };
