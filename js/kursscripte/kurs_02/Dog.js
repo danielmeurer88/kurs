@@ -14,7 +14,7 @@ function Dog() {
     this._hunger = 100;
     this._currentTarget = Person.GetNobody();
     
-    this.CurrentActivity = "idling"; // barking, growling, drinking, eating, resting
+    this._currentActivity = "idling"; // barking, growling, drinking, eating, resting
     
     this.EnergyCosts = {
         Barking : -3,
@@ -53,7 +53,6 @@ Dog.prototype.Initialize = function () {
  * @returns {undefined}
  */
 Dog.prototype.Update = function () {
-
 };
 
 /**
@@ -80,7 +79,7 @@ Dog.prototype.Draw = function (c) {
         
         var dx,dy = 300;
         
-        if(this.CurrentActivity === "drinking")
+        if(this._currentActivity === "drinking")
             dx = 42;
         else
             dx = 135;
@@ -96,7 +95,7 @@ Dog.prototype.Draw = function (c) {
 };
 
 Dog.prototype._drawInFrontOfTheFence = function () {
-    var a = this.CurrentActivity;
+    var a = this._currentActivity;
     if(a === "barking" || a === "growling"|| a === "resting" || a === "idling")
         return true;
     else
@@ -111,12 +110,18 @@ Dog.prototype._log = function (txt) {
 Dog.prototype.Bark = function (target) {
     
     if(target instanceof Person && target._canReceiveAggression()){
-            this.CurrentActivity = "barking";
+            this._currentActivity = "barking";
             this._currentTarget = target;
             return;
     }
     
-    this.CurrentActivity = "idling";
+    if(this._energy < (this.EnergyCosts.Barking * (-1))){
+        this._currentActivity = "idling";
+        this._log(this.Name + "tries to bark but energy is too low");
+        return;
+    }
+    
+    this._currentActivity = "idling";
     this._log(this.Name + "tries to bark but nobody is in front of the fence");
     
 };
@@ -124,23 +129,29 @@ Dog.prototype.Bark = function (target) {
 Dog.prototype.Growl = function (target) {
     
     if(target instanceof Person && target._canReceiveAggression()){
-            this.CurrentActivity = "growling";
+            this._currentActivity = "growling";
             this._currentTarget = target;
             return;
     }
     
-    this.CurrentActivity = "idling";
+    if(this._energy < (this.EnergyCosts.Growling * (-1))){
+        this._currentActivity = "idling";
+        this._log(this.Name + "tries to growl but energy is too low");
+        return;
+    }
+    
+    this._currentActivity = "idling";
     this._log(this.Name + "tries to growl but nobody is in front of the fence");
 };
 
 Dog.prototype.Eat = function () {
     this._currentTarget = Person.GetNobody();
-    this.CurrentActivity = "eating";
+    this._currentActivity = "eating";
 };
 
 Dog.prototype.Drink = function () {
     this._currentTarget = Person.GetNobody();
-    this.CurrentActivity = "drinking";
+    this._currentActivity = "drinking";
 };
 
 Dog.prototype.Check = function () {
@@ -148,15 +159,12 @@ Dog.prototype.Check = function () {
 };
 
 Dog.prototype.Rest = function () {
-    this.CurrentActivity = "resting";
+    this._currentActivity = "resting";
 };
 
 Dog.prototype.DoSingleRound = function () {
     // INVOKE USER MADE FUNCTION
     DoggyRound(this.GUI.Round, this);
-    
-    this.ResolveRound();
-    
 };
 
 Dog.prototype.ResolveRound = function () {
@@ -168,41 +176,41 @@ Dog.prototype.ResolveRound = function () {
     this._thirst -= this._thirstDecrease;
     forceRange(this,"_thirst", 0,100);
     
-    if(this.CurrentActivity!== "eating" && this._hunger < this._hungerThreshold){
+    if(this._currentActivity!== "eating" && this._hunger < this._hungerThreshold){
         this._energy += this.EnergyCosts.Hungry;
         this._log(this.Name + " is hungry and loses " + this.EnergyCosts.Hungry + " energy");
     }
-    if(this.CurrentActivity!== "drinking" && this._thirst < this._thirstThreshold){
+    if(this._currentActivity!== "drinking" && this._thirst < this._thirstThreshold){
         this._energy += this.EnergyCosts.Thirsty;
         this._log(this.Name + " is thirsty and loses " + this.EnergyCosts.Thirsty + " energy");
     }
     forceRange(this,"_energy", 0,100);
 
 
-    if(this.CurrentActivity === "idling"){
+    if(this._currentActivity === "idling"){
         this._log(this.Name + " idles");
     }
     
-    if(this.CurrentActivity === "resting"){
+    if(this._currentActivity === "resting"){
         this._currentTarget = Person.GetNobody();
         this._energy += this.EnergyCosts.Resting;
         forceRange(this,"_energy", 0,100);
         this._log(this.Name + " is resting and gains " + this.EnergyCosts.Resting + " energy");
     }
     
-    if(this.CurrentActivity === "drinking"){
+    if(this._currentActivity === "drinking"){
         this._thirst += this._drinkingIncrease;
         forceRange(this,"_thirst", 0,100);
         this._log(this.Name + " is drinking and gains " + this._drinkingIncrease + " thirst");
     }
     
-    if(this.CurrentActivity === "eating"){
+    if(this._currentActivity === "eating"){
         this._hunger += this._eatingIncrease;
         forceRange(this,"_hunger", 0,100);
         this._log(this.Name + " is eating and gains " + this._eatingIncrease + " hunger");
     }
         
-    if(this.CurrentActivity === "barking"){
+    if(this._currentActivity === "barking"){
         this._energy += this.EnergyCosts.Barking;
         forceRange(this,"_energy", 0,100);
         this._log(this.Name + " barks and loses " + this.EnergyCosts.Barking + " energy");
@@ -210,7 +218,7 @@ Dog.prototype.ResolveRound = function () {
         return false;
     }
     
-    if(this.CurrentActivity === "growling"){
+    if(this._currentActivity === "growling"){
         this._energy += this.EnergyCosts.Growling;
         forceRange(this,"_energy", 0,100);
         this._log(this.Name + " growls and loses " + this.EnergyCosts.Growling + " energy");
@@ -237,6 +245,6 @@ Dog.prototype.GetThirst = function () {
 };
 
 Dog.prototype.GetActivity = function () {
-    return this.CurrentActivity;
+    return this._currentActivity;
     
 };

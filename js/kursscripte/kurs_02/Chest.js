@@ -7,8 +7,13 @@ function Chest() {
     
     this.ChestPic = {complete:false};
     
-    this._startAmount = 1000;
+    this._startAmount = 250;
     this._gold = this._startAmount;
+    
+    this.X = 218;
+    this.Y = 260;
+    this.Width = 268 * 0.8;
+    this.Height = 181 * 0.8;
     
 this.Initialize();
 }
@@ -29,11 +34,7 @@ Chest.prototype.Initialize = function () {
  * Update
  * @returns {undefined}
  */
-Chest.prototype.Update = function () {
-    if(this._gold <= 0){
-        this.GUI.Lose();
-    }
-};
+Chest.prototype.Update = function () {};
 
 /**
  * ProcessInput
@@ -49,7 +50,10 @@ Chest.prototype.ProcessInput = function () {};
 Chest.prototype.Draw = function (c) {
     c.save();
     if(this.ChestPic.complete){
-        c.drawImage(this.ChestPic, 218, 260, this.ChestPic.width*0.8, this.ChestPic.height*0.8);
+        c.drawImage(this.ChestPic, this.X, this.Y, this.Width, this.Height);
+        c.fillStyle = "white";
+        c.setFontHeight(16);
+        c.fillSpinnedText(this.X + this.Width/2, this.Y + this.Height/2, this._gold, 0);
     }
     c.restore();
 
@@ -67,7 +71,9 @@ Chest.prototype.GetGold = function () {
 
 Chest.prototype.StealFrom = function (num) {
     this._gold -= num;
-    forceRange(this,"_gold", 0,this._startAmount);
-    //this._log("# " + num + " Gold wurde geklaut");
+    
+    if(this._gold <= 0){
+        this.GUI.Lose();
+    }
     
 };

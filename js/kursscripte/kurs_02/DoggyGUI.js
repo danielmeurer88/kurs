@@ -25,7 +25,7 @@ function DoggyGUI() {
     this.Dog = {};
     this.Chest = {};
     this.Person = {};
-    this._nextActionCreation = 0;
+    this._nextCreation = 0;
     
 this.Initialize();
 }
@@ -46,7 +46,7 @@ DoggyGUI.prototype.Initialize = function () {
     this.Chest = new Chest();
     this.Person = Person.GetNobody();
     
-    this._nextActionCreation = Random.GetNumber(4, 7);
+    this._nextCreation = Random.GetNumber(2, 6);
     
     this.Button.Start = new Button({
         X:10, Y: this.Height - 50, Width:180, Height:40,
@@ -159,33 +159,69 @@ DoggyGUI.prototype.Draw = function (c) {
     c.textBaseline = "top";
     // Energy
     x = 20;
-    y += 5;
+    y += 15;
     var space = 120;
+    var barspace = 20;
     
     c.fillStyle = "#ffffff";
     c.textAlign = "left";
     c.fillText("Energy:", x, y);
     c.textAlign = "right";
     c.fillText(en, x + space, y);
+    
+    // Energy bar
+    c.fillStyle = "#999";
+    c.fillRect(x + space + barspace, y , 200, 16);
+    c.fillStyle = "#00ff00";
+    c.fillRect(x + space + barspace, y+1 , en*2, 14);
+        
     // Hunger
+    y += 20;
+    c.fillStyle = "#ffffff";
     c.textAlign = "left";
-    c.fillText("Hunger: ", x, y + 20);
+    c.fillText("Hunger: ", x, y);
     c.textAlign = "right";
-    c.fillText(hu, x + space, y + 20);
-    // Hunger
+    c.fillText(hu, x + space, y);
+    
+    // Hunger bar
+    c.fillStyle = "#999";
+    c.fillRect(x + space + barspace, y , 200, 16);
+    c.fillStyle = "#00ff00";
+    c.fillRect(x + space + barspace, y+1 , hu*2, 14);
+    
+    // Thirst
+    y += 20;
+    c.fillStyle = "#ffffff";
     c.textAlign = "left";
-    c.fillText("Thirst: ", x, y + 40);
+    c.fillText("Thirst: ", x, y);
     c.textAlign = "right";
-    c.fillText(th, x + space, y + 40);
+    c.fillText(th, x + space, y);
+    
+    // thirst bar
+    c.fillStyle = "#999";
+    c.fillRect(x + space + barspace, y , 200, 16);
+    c.fillStyle = "#00ff00";
+    c.fillRect(x + space + barspace, y+1 , th*2, 14);
+    
+    // printing Gold
+    x = this.Width / 2 + 200;
+    y -= 20;
+    c.setFontHeight(26);
+    c.fillStyle = "#ffffff";
+    c.textAlign = "left";
+    c.fillText("Gold: ", x, y);
+    c.textAlign = "right";
+    c.fillText(this.Chest._gold, x + space + 10, y);
     
     // printing number of rounds
+    c.setFontHeight(20);
     c.textAlign = "left";
     var x = this.Button.Step.X + this.Button.Step.Width;
     c.fillStyle = "#ffffff";
-    c.fillText("Round: ", x+10, this.Height - 30);
+    c.fillText("Round: ", x+10, this.Height - 40);
     x += c.measureText("Round: ").width;
-    c.fillText(this.Round, x + 30, this.Height - 30);
-    
+    c.fillText(this.Round, x + 30, this.Height - 40);
+        
     c.restore();
 
     this.Button.Start.Draw(c);
@@ -204,6 +240,8 @@ DoggyGUI.prototype._doSingleRound = function () {
     
     this.Dog.DoSingleRound(); // dog needs to be first in order to be able to prevent stealing
     this.Person.DoSingleRound();
+    this.Dog.ResolveRound();
+    
     this.PersonCreation();
 };
 
@@ -216,24 +254,24 @@ DoggyGUI.prototype._getPerson = function () {
 };
 
 DoggyGUI.prototype.Lose = function () {
-    var txt = "----> Du hast bis Runde " + this.Round + " durgehalten.";
+    var txt = "----> You made it to the " + this.Round + ". Round.";
     this._log(txt);    
     
     this._running = false;
     
     var cbo = function(){
-        var txt = "Reset-Feature not yet implemented. Please reload";
+        var txt = "Reset-Feature not yet implemented. Please reload!";
         console.log("OOOOOO - " + txt);
         new Alert(txt).Start();
         
     }.getCallbackObject(this);
     
-    new Confirm([txt, "", "M{oe}chtest du noch einmal?".decodeURI()], cbo).Start();
+    new Confirm([txt, "", "Would you like to play again?".decodeURI()], cbo).Start();
 };
 
 DoggyGUI.prototype.PersonCreation = function () {
     // check if the current round is ready for an Action (for a new person to appear)
-    if(this.Round < this._nextActionCreation) return false;
+    if(this.Round < this._nextCreation) return false;
     
     //if there is a person than end function
     if(this.Person.Position > 0) return false;
@@ -241,25 +279,43 @@ DoggyGUI.prototype.PersonCreation = function () {
     var labels = ["Nothing", "SmallChild", "TallChild", "Thief"];
     var chances = [40, 25, 20, 15];
     var lot = Random.DrawLot(labels, chances);
-    
-    this._log("--- "+ lot + " was created");
-    
+        
     if(lot === "SmallChild"){
-        //this.Person = new SmallChild();
-        /*testing*/this.Person = new Person();
+        this.Person = new SmallChild();
     }
     
     if(lot === "TallChild"){
-        //this.Person = new TallChild();
-        /*testing*/this.Person = new Person();
+        this.Person = new TallChild();
     }
     
     if(lot === "Thief"){
-        //this.Person = new Thief();
-        /*testing*/this.Person = new Person();
+        this.Person = new Thief();
     }
-        
-//    if(lot !== "Nothing")
-//        this._nextActionCreation = this.Round + Random.GetNumber(4, 7);
+            
+};
+
+DoggyGUI.prototype.ExtendCreation = function (num) {
+    var num = num || Random.GetNumber(3,5);
+    this._nextCreation = this.Round + num;
+};
+
+DoggyGUI.prototype.PlayWithDog = function (num) {
+    this.Dog._currentActivity = "idling";
+    this.Dog._energy -= num;
+    forceRange(this.Dog,"_energy", 0,100);
+};
+
+DoggyGUI.prototype.GiveDog = function (what, num) {
+    this.Dog._currentActivity = "idling";
+    
+    if(what === "food"){
+        this.Dog._hunger += num;
+        forceRange(this.Dog,"_hunger", 0,100);
+    }
+    
+    if(what === "water"){
+        this.Dog._hunger += num;
+        forceRange(this.Dog,"_hunger", 0,100);
+    }
     
 };

@@ -6,7 +6,7 @@ function Person() {
     this.Position = 1; // Attribute Position is used to locate the Person
     // 0 : "nobody is there
     // 1 : Person is approaching, able to be seen by the dog
-    // 2 : Person is almost in front of the fence, can now be barked/growled at
+    // 2 : Person is almost in front of the fence
     // 3 : ready to do something
     
     this._startAggressionThreshold = 5;
@@ -15,6 +15,18 @@ function Person() {
     this._comming = true; // is the person going to the fence or away
     
     this.Pic = {complete:false};
+    
+    this.Width = 205*0.8;
+    this.Height = 435*0.8;
+    
+    this.X = 0 - this.Width;
+    this.Y = 75;
+    
+    this.Name = "Person";
+    
+    this._atTheFence = false; // if the Person is/was at the fence
+    this._gone = false;
+    
 }
 Person.prototype = Object.create(ABO.prototype);
 Person.prototype.constructor = Person;
@@ -31,7 +43,7 @@ Person.prototype._receiveAggression = function (agg) {
 };
 
 Person.prototype._canReceiveAggression = function () {
-    if(this.Position >= 2) return true; else false;
+    if(this.Position >= 1) return true; else false;
 };
 
 Person.prototype._setNerves = function (thr) {
@@ -43,14 +55,17 @@ Person.prototype.GetPosition = function () {
     return this.Position;
 };
 
+Person.prototype.GetType = function () {
+    return this.Name;
+};
+
 Person.prototype.IsComming = function () {
     return this._isComming;
 };
 
 Person.prototype.DoSingleRound = function () {
-    // will be overwritten by children
     
-    if(this.Position === 0) return; // already gone
+    if(this.Position === 0 && !this._atTheFence) return; // already gone, maybe it's the "nobody-Person
     
     // default:
     if(this._comming)
@@ -59,39 +74,64 @@ Person.prototype.DoSingleRound = function () {
         this.Position--;
     forceRange(this,"Position", 0,3);
     
+    // if the person came from the fence and is gone
+    if(this.Position === 0 && this._atTheFence && !this._comming && !this._gone){
+        this._gone = true;
+        this.DoStuffWhenGone();
+    }
+    
+    // if a person reaches position 2, it counts as been at the fence
+    if(this.Position === 2 && !this._atTheFence){
+        this._atTheFence = true;
+        this._log("STATUS: The " + this.Name + " is almost at the fence");
+    }
+    
     // after Person arrives at the fence, it goes away
-    if(this.Position === 3)
+    if(this.Position === 3){
         this._comming = false;
+        this._log("STATUS: The " + this.Name + " is at the fence");
+        this.DoAtTheFenceStuff();
+    }
 };
 
-Person.prototype.ProcessInput = function () {
-    // will be overwritten by children
-};
+/**
+ * will be overwritten by children
+ * @returns {undefined}
+ */
+Person.prototype.DoAtTheFenceStuff = function () {};
 
-Person.prototype.Update = function () {
-    // will be overwritten by children
+/**
+ * can be overwritten by children
+ * @returns {undefined}
+ */
+Person.prototype.DoStuffWhenGone = function () {
+    this.GUI.ExtendCreation();
 };
 
 Person.prototype.Draw = function (c) {
     // will be overwritten by children
-    
-    var y = 75;
-    var x = -999;
-    var width = 205*0.8;
-    var height = 435*0.8;
+    c.save();
+    if(this.Position === 0){
+        this.X = 0 - this.Width;
+    }
     
     if(this.Position === 1)
-        x = this.GUI.Width - (width - 75);
+        this.X = this.GUI.Width - (this.Width - 75);
     
     if(this.Position === 2)
-        x = this.GUI.Width - (width);
+        this.X = this.GUI.Width - (this.Width);
     
     if(this.Position === 3)
-        x = this.GUI.Width - (width + 75);
+        this.X = this.GUI.Width - (this.Width + 75);
     
-    var img = this.Engine.MediaManager.GetImage("tallchild");
-    if(img)
-        c.drawImage(img, x, y, width, height);
+    if(this.Pic && this.Pic.complete)
+        c.drawImage(this.Pic, this.X, this.Y, this.Width, this.Height);
+    else{
+        c.fillRect(this.X, this.Y, this.Width, this.Height);
+        c.fillStyle = "white";
+        c.fillText(this.Name, this.X +20, this.Y +20);
+    }
+    c.restore();    
 };
 
 /**
@@ -101,6 +141,7 @@ Person.prototype.Draw = function (c) {
 Person.GetNobody = function(){
     var p = new Person();
     p.Position = 0;
+    p.Name = "Nobody";
     return p;
 };
 
