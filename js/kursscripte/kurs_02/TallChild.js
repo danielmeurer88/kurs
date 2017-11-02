@@ -13,8 +13,8 @@ TallChild.prototype.constructor = TallChild;
 TallChild.prototype.Initialize = function () {
 
     this.Pic = this.Engine.MediaManager.GetImage("tallchild");
-    this._setNerves(Random.GetNumber(2,4));
-    this._log("STATUS: A " + this.Name + " is comming");
+    this._setNerves(Random.GetNumber(Rules.Person.TallChild.Nerves[0],Rules.Person.TallChild.Nerves[4]));
+    this._log("A " + this.Name + " is comming");
 };
 
 /**
@@ -23,17 +23,17 @@ TallChild.prototype.Initialize = function () {
  */
 TallChild.prototype.DoAtTheFenceStuff = function () {
 
-    var res = Random.DrawLot(["play", "steal"], [3,1]);
+    var res = Random.DrawLot(Rules.Person.TallChild.ActionLabels, Rules.Person.TallChild.ActionChances);
     
     if(res === "play"){
-        var num = Random.GetNumber(5, 10);
+        var num = Random.GetNumber(Rules.Person.TallChild.EnergyPlay[0], Rules.Person.TallChild.EnergyPlay[1]);
         this.GUI.PlayWithDog(num);
         this._log(this.Name + " plays with the dog for " + num + " energy");
     }
     
     if(res === "steal"){
         //steal
-        var steal = Random.GetNumber(10, 60);
+        var steal = Random.GetNumber(Rules.Person.TallChild.GoldSteal[0], Rules.Person.TallChild.GoldSteal[1]);
         this.GUI.Chest.StealFrom(steal);
         this._log(this.Name + " steals " + steal + " Gold out of the chest");
     }

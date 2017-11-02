@@ -25,7 +25,7 @@
     // 0 : Nobody is there
     // 1 : Person is approaching, able to be seen by the dog
     // 2 : Person is almost in front of the fence
-    // 3 : at the fence and will do something
+    // 3 : at the fence and has done something
 
 // target.GetType() : returns the type of the person as a string ("Nobody", "SmallChild", "TallChild", "Thief")
 
@@ -60,45 +60,44 @@ function DoggyRound(round, dog,){
     var pos = target.GetPosition();
     savePosition(pos);
     
+    var leaving = (lastPos < pos) ? true : false;
+    var thiefStuck = false;
+    if(type==="Thief" && pos === 3 && lastPos === 3)
+        thiefStuck = true;
+    
     var danger = 0;
     
-    if(pos <= 1){
-        
-    }
-    
-    if(type === "Thief" && pos === 1 && newTarget){
-        danger = 1;
-        if(en > 40)
-            dog.Bark(target)
-        if(en > 60)
-            dog.Growl(target);
-    }
-    
-    // thief could steal, growling could prevent it
-    if(type === "Thief" && pos === 2)
+    // danger detection
+    if(type === "Thief" && pos === 1 )
         danger = 3;
+    
+    if(type === "Thief" && pos === 2 )
+        danger = 2;
     
     // thief could steal again but also leave
     if(type === "Thief" && pos === 3)
         danger = 2;
     
-    if(type === "TallChild" && pos === 2)
+    if(type === "TallChild" && pos === 1 && !leaving)
+        danger = 1;
+    
+    if(type === "TallChild" && pos === 2 && !leaving)
         danger = 2;
     
     if(danger === 2)
         dog.Bark(target);
     
-    if(danger === 3)
+    if(danger === 3 || thiefStuck)
         dog.Growl(target);
     
-    //DO Something here
+    //Danger prevention
     
     if(danger < 2){
         if(th <= 15) dog.Drink();
         if(hu <= 15) dog.Eat();
     }
-    // dog should rest if energy is too low
-    if(danger < 3 && en <= 15)
+    // dog should rest if energy is too low and no immidiate danger
+    if(danger < 3 && en <= 20)
         dog.Rest();
     
     // save guard at the end

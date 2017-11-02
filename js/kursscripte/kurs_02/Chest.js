@@ -7,7 +7,7 @@ function Chest() {
     
     this.ChestPic = {complete:false};
     
-    this._startAmount = 250;
+    this._startAmount = Rules.Chest.StartAmount;
     this._gold = this._startAmount;
     
     this.X = 218;
@@ -71,9 +71,4 @@ Chest.prototype.GetGold = function () {
 
 Chest.prototype.StealFrom = function (num) {
     this._gold -= num;
-    
-    if(this._gold <= 0){
-        this.GUI.Lose();
-    }
-    
 };

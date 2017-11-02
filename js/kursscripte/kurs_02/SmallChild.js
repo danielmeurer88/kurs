@@ -13,8 +13,8 @@ SmallChild.prototype.constructor = SmallChild;
 SmallChild.prototype.Initialize = function () {
 
     this.Pic = this.Engine.MediaManager.GetImage("smallchild");
-    this._setNerves(Random.GetNumber(1,3));
-    this._log("STATUS: A " + this.Name + " is comming");
+    this._setNerves(Random.GetNumber(Rules.Person.SmallChild.Nerves[0],Rules.Person.SmallChild.Nerves[1]));
+    this._log("A " + this.Name + " is comming", 2);
 };
 
 /**
@@ -23,22 +23,22 @@ SmallChild.prototype.Initialize = function () {
  */
 SmallChild.prototype.DoAtTheFenceStuff = function () {
     
-    var res = Random.DrawLot(["play", "feed"], [3,7]);
+    var res = Random.DrawLot(Rules.Person.SmallChild.ActionLabels, Rules.Person.SmallChild.ActionChances);
     var num;
     
     if(res === "play"){
-        num = Random.GetNumber(10, 15);
+        num = Random.GetNumber(Rules.Person.SmallChild.EnergyPlay[0], Rules.Person.SmallChild.EnergyPlay[1]);
         this.GUI.PlayWithDog(num);
-        this._log(this.Name + " plays with the dog for " + num + " energy");
+        this._log(this.Name + " plays with the dog for " + num + " energy", 3);
     }
     
     if(res === "feed"){
-        num = Random.GetNumber(4, 10);
-        res = Random.DrawLot(["food", "water"], [5,5]);
+        num = Random.GetNumber(Rules.Person.SmallChild.EnergyFeed[0], Rules.Person.SmallChild.EnergyFeed[1]);
+        res = Random.DrawLot(Rules.Person.SmallChild.FeedingLabels, Rules.Person.SmallChild.FeedingChances);
         this.GUI.GiveDog(res,num);
         if(res === "water")
-            this._log(this.Name + " gives " +res+ " to the dog for " + num + " thirst");
+            this._log(this.Name + " gives " +res+ " to the dog for " + num + " thirst", 3);
         else
-            this._log(this.Name + " gives " +res+ " to the dog for " + num + " hunger");
+            this._log(this.Name + " gives " +res+ " to the dog for " + num + " hunger", 3);
     }
 };

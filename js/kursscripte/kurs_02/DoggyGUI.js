@@ -13,7 +13,8 @@ function DoggyGUI() {
     this.Button = {
         Start : {},
         Pause : {},
-        Step : {}
+        Step : {},
+        Download : {}
     };
     
     this.Pics = {
@@ -27,6 +28,8 @@ function DoggyGUI() {
     this.Person = {};
     this._nextCreation = 0;
     this._gameOver = false;
+    
+    this.Log = [];
         
 this.Initialize();
 }
@@ -39,6 +42,10 @@ DoggyGUI.prototype.constructor = DoggyGUI;
  * @returns {undefined}
  */
 DoggyGUI.prototype.Initialize = function () {
+
+    var now = new Date();
+    now = now.toLocaleDateString() + " - " + now.toLocaleTimeString();
+    this._log("---- Starting the Game at " + now, 0); 
 
     this.Pics.Background = this.Engine.MediaManager.GetImage("background");
     
@@ -94,6 +101,20 @@ DoggyGUI.prototype.Initialize = function () {
             function(){return !this._running;}.getCallbackObject(this)
     );
     
+    this.Button.Download = new Button(
+            this.X + this.Width - 60, this.Y + this.Height - 60, 50, 50,
+            {DisplayType: "both", Codename: "disk", TextColor: "black", FontHeight: 18,
+                TriggerCallbackObject: {that: this,
+                    function: function () {
+                         this.DownloadPDF();
+                    }
+                },
+                HoverText: "Download log as pdf"
+            }
+    );
+    this.Button.Download.AddButtonEffect();
+    this.Button.Download.ColorCode[0] = "#555";
+    
 };
 /**
  * Update
@@ -103,6 +124,7 @@ DoggyGUI.prototype.Update = function () {
     this.Button.Start.Update();
     this.Button.Pause.Update();
     this.Button.Step.Update();
+    this.Button.Download.Update();
     
     this.Chest.Update();
     this.Person.Update();
@@ -123,6 +145,7 @@ DoggyGUI.prototype.ProcessInput = function () {
     this.Button.Start.ProcessInput();
     this.Button.Pause.ProcessInput();
     this.Button.Step.ProcessInput();
+    this.Button.Download.ProcessInput();
     
     this.Chest.ProcessInput();
     this.Person.ProcessInput();
@@ -228,26 +251,34 @@ DoggyGUI.prototype.Draw = function (c) {
     this.Button.Start.Draw(c);
     this.Button.Pause.Draw(c);
     this.Button.Step.Draw(c);
+    this.Button.Download.Draw(c);
 };
 
 DoggyGUI.prototype._log = function (txt, header) {
-    header = 3; // size of text: 3 = normal, 2 = slightly bigger, 1 = big, 0 = Start, End    
+    // header: size of text: 3 = normal, 2 = slightly bigger, 1 = big, 0 = Start, End    
     console.log(txt);
-    
+    this.Log.push({txt:txt, header:header});
     if(typeof logArray === "undefined") return;
-    logArray.push({txt:txt, header:header});
+        logArray.push({txt:txt, header:header});
 };
 
 DoggyGUI.prototype._doSingleRound = function () {
     
     if(this._gameOver) return;
     
-    this._log("+++ Runde: " + (this.Round+1));    
+    this._log("+++ Runde: " + (this.Round+1), 1);    
     this._ts_lastround = Date.now();
     this.Round++;
     
     this.Dog.DoSingleRound(); // dog needs to be first in order to be able to prevent stealing
     this.Person.DoSingleRound();
+    
+    // if the person stole all the money
+    if(this.Chest._gold <= 0){
+        this.Lose();
+        return;
+    }
+    
     this.Dog.ResolveRound();
     
     this.PersonCreation();
@@ -263,7 +294,7 @@ DoggyGUI.prototype._getPerson = function () {
 
 DoggyGUI.prototype.Lose = function () {
     var txt = "----> You made it to the " + this.Round + ". Round.";
-    this._log(txt);    
+    this._log(txt, 0);    
     
     this._running = false;
     this._gameOver = true;
@@ -285,8 +316,8 @@ DoggyGUI.prototype.PersonCreation = function () {
     //if there is a person than end function
     if(this.Person.Position > 0) return false;
     
-    var labels = ["Nothing", "SmallChild", "TallChild", "Thief"];
-    var chances = [40, 25, 20, 15];
+    var labels = Rules.CharacterLabels;
+    var chances = Rules.CharacterChances;
     var lot = Random.DrawLot(labels, chances);
         
     if(lot === "SmallChild"){
@@ -303,8 +334,8 @@ DoggyGUI.prototype.PersonCreation = function () {
             
 };
 
-DoggyGUI.prototype.ExtendCreation = function (num) {
-    var num = num || Random.GetNumber(3,5);
+DoggyGUI.prototype.ExtendCreation = function () {
+    var num = Random.GetNumber(Rules.ExtendCreation[0],Rules.ExtendCreation[1]);
     this._nextCreation = this.Round + num;
 };
 
@@ -352,4 +383,46 @@ DoggyGUI.prototype.FastForward = function (rounds) {
 	}
 	
     
+};
+
+DoggyGUI.prototype.DownloadPDF = function () {
+    var name = prompt("Name of the file");
+    var doc = new jsPDF();
+    
+    var border = 15;
+    
+    var pagey = border;
+    var a4height = 297;
+    var pagemax = a4height - border;
+    
+    var fontSize_normal = 11;
+    var fontSpace = 3;
+    
+    // setFontSize handles arguments as a number in points
+    var ptcmcr = 0.5; // points to cm conversion rate
+    
+    // Title
+    doc.setFontSize(fontSize_normal + 2);
+    var now = new Date();
+    now = now.toLocaleDateString() + " - " + now.toLocaleTimeString() + " Uhr";
+    var title = "Game played on: " + now;
+    doc.text(title, border, pagey);
+    pagey += (fontSize_normal + 2 + fontSpace) * ptcmcr;
+    
+    // rest of the log
+    for(var i=0; i<this.Log.length; i++){
+        
+        doc.setFontSize(fontSize_normal);
+        doc.text(this.Log[i].txt, border, pagey);
+        
+        pagey += (fontSize_normal + fontSpace) * ptcmcr;
+        
+        if(pagey > pagemax){
+            doc.addPage();
+            pagey = border;
+        }
+        
+    }
+    
+    doc.save(name + ".pdf");
 };

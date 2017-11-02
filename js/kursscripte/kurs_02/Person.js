@@ -31,8 +31,8 @@ function Person() {
 Person.prototype = Object.create(ABO.prototype);
 Person.prototype.constructor = Person;
 
-Person.prototype._log = function (txt) {
-    this.GUI._log(txt);
+Person.prototype._log = function (txt, header) {
+    this.GUI._log(txt, header);
 };
 
 Person.prototype._receiveAggression = function (agg) {
@@ -83,13 +83,13 @@ Person.prototype.DoSingleRound = function () {
     // if a person reaches position 2, it counts as been at the fence
     if(this.Position === 2 && !this._atTheFence){
         this._atTheFence = true;
-        this._log("STATUS: The " + this.Name + " is almost at the fence");
+        this._log("The " + this.Name + " is almost at the fence", 3);
     }
     
     // after Person arrives at the fence, it goes away
     if(this.Position === 3){
         this._comming = false;
-        this._log("STATUS: The " + this.Name + " is at the fence");
+        this._log("The " + this.Name + " is at the fence", 3);
         this.DoAtTheFenceStuff();
     }
 };
