@@ -27,7 +27,6 @@ function callback(engine){
     engine.AddObject(dgui);
      
     engine.Start();
-    dgui.FastForward();
 	
 }
 

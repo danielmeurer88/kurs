@@ -3,6 +3,7 @@
 var Rules = {};
 Rules.CharacterLabels = ["Nothing", "SmallChild", "TallChild", "Thief"];
 Rules.CharacterChances = [30, 27, 25, 18];
+Rules.StartCreation = [2,4];
 Rules.ExtendCreation = [3,5];
 
 Rules.Dog = {};

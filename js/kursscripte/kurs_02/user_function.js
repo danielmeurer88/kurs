@@ -14,6 +14,11 @@
 // dog.Drink() : your dog will drink and gain thirst satisfaction at the end of the round (drinking will be interrupted by children playing or giving things to the dog)
 // dog.Eat() : your dog will eat and gain hunger satisfaction at the end of the round (eating will be interrupted by children playing or giving things to the dog)
 
+// dog.IsHungry()
+// dog.IsThirsty()
+// dog.IsAbleToBark();
+// dog.IsAbleToGrowl();
+
 // dog.Check() : your dog checks if there is a person in front of the fence, Check() returns a target (class: Person)
 
 // dog.Bark(target) :
@@ -21,13 +26,15 @@
 
 // target-Methods (class: Person)
 
-// target.GetPosition() : returns the position encoded as a number between 0-3
-    // 0 : Nobody is there
-    // 1 : Person is approaching, able to be seen by the dog
-    // 2 : Person is almost in front of the fence
-    // 3 : at the fence and has done something
+// target.GetPosition() : returns the position encoded as a number between 0-4
+    // 0 : "Nobody" is there
+    // 1 : Person is comming
+    // 2 : Person is almost in front of the fence, able to be seen by the dog
+    // 3 : ready to do something
+    // 4 : at the fence and has done something
 
 // target.GetType() : returns the type of the person as a string ("Nobody", "SmallChild", "TallChild", "Thief")
+// target.IsComming() : returns boolean whether it's comming or going
 
 function DoggyRound(round, dog,){
         
@@ -35,7 +42,7 @@ function DoggyRound(round, dog,){
     var restoreType = function(){return sessionStorage.getItem("doggy_lastType");}
     var savePosition = function(pos){sessionStorage.setItem("doggy_lastPos", pos);};
     var restorePosition = function(){return sessionStorage.getItem("doggy_lastPos");}
-    
+        
     var lastType = "Nobody";
     var lastPos = 0;
     
@@ -50,58 +57,26 @@ function DoggyRound(round, dog,){
     
     var target = dog.Check();
     var type = target.GetType();
-    var newTarget = false;
-    
-    if(type !== lastType)
-        newTarget = true;
-    
     saveType(type);
-    
     var pos = target.GetPosition();
     savePosition(pos);
     
-    var leaving = (lastPos < pos) ? true : false;
-    var thiefStuck = false;
-    if(type==="Thief" && pos === 3 && lastPos === 3)
-        thiefStuck = true;
+    var comming = target.IsComming();
     
-    var danger = 0;
-    
-    // danger detection
-    if(type === "Thief" && pos === 1 )
-        danger = 3;
-    
-    if(type === "Thief" && pos === 2 )
-        danger = 2;
-    
-    // thief could steal again but also leave
-    if(type === "Thief" && pos === 3)
-        danger = 2;
-    
-    if(type === "TallChild" && pos === 1 && !leaving)
-        danger = 1;
-    
-    if(type === "TallChild" && pos === 2 && !leaving)
-        danger = 2;
-    
-    if(danger === 2)
+    if(type === "Thief" && comming)
         dog.Bark(target);
-    
-    if(danger === 3 || thiefStuck)
-        dog.Growl(target);
-    
-    //Danger prevention
-    
-    if(danger < 2){
-        if(th <= 15) dog.Drink();
-        if(hu <= 15) dog.Eat();
-    }
-    // dog should rest if energy is too low and no immidiate danger
-    if(danger < 3 && en <= 20)
-        dog.Rest();
     
     // save guard at the end
     // to be sure that dog is not idling
-    if(dog.GetActivity() === "idling")
-        dog.Rest();
+    var a = dog.GetActivity();
+    if(a === "idling" || a === "resting" || a === "eating" || a === "drinking"){
+        if(hu < th)
+            dog.Eat();
+        else
+            dog.Drink();
+        if(en < hu && en < th)
+            dog.Rest();
+        
+    }
+        
 }

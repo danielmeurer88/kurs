@@ -3,11 +3,14 @@ function Person() {
     this.GUI = this.Engine.GetSelectedObject();
     this._createdAtRound = this.GUI.Round;
     
-    this.Position = 1; // Attribute Position is used to locate the Person
+    
+    
+    this.Position = 0; // Attribute Position is used to locate the Person
     // 0 : "nobody is there
-    // 1 : Person is approaching, able to be seen by the dog
-    // 2 : Person is almost in front of the fence
+    // 1 : Person is comming
+    // 2 : Person is almost in front of the fence, able to be seen by the dog
     // 3 : ready to do something
+    // 4 : at the fence and has done something
     
     this._startAggressionThreshold = 5;
     this._nerves = this._startAggressionThreshold;
@@ -23,8 +26,10 @@ function Person() {
     this.Y = 75;
     
     this.Name = "Person";
+    this.Number = Person.NumberPool++;
     
     this._atTheFence = false; // if the Person is/was at the fence
+    this._scared = false;
     this._gone = false;
     
 }
@@ -37,13 +42,16 @@ Person.prototype._log = function (txt, header) {
 
 Person.prototype._receiveAggression = function (agg) {
     this._nerves -= agg;
-    forceRange(this,"_nerves", 0,this._startAggressionThreshold);
-    if(this._nerves === 0)
+    
+    if(this._nerves <= 0){
         this._comming = false;
+        this._scared = true;
+        this._log(this.Name + " is scared");
+    }
 };
 
 Person.prototype._canReceiveAggression = function () {
-    if(this.Position >= 1) return true; else false;
+    return (this.Position > 1) ? true : false;
 };
 
 Person.prototype._setNerves = function (thr) {
@@ -60,37 +68,54 @@ Person.prototype.GetType = function () {
 };
 
 Person.prototype.IsComming = function () {
-    return this._isComming;
+    if(this.Name === "Nobody") return false;
+    return this._comming;
 };
 
 Person.prototype.DoSingleRound = function () {
     
-    if(this.Position === 0 && !this._atTheFence) return; // already gone, maybe it's the "nobody-Person
+    if(this.Name === "Nobody") return; // No Nobody-Person
     
     // default:
     if(this._comming)
         this.Position++;
     else
         this.Position--;
-    forceRange(this,"Position", 0,3);
+    forceRange(this,"Position", 0,4);
     
     // if the person came from the fence and is gone
-    if(this.Position === 0 && this._atTheFence && !this._comming && !this._gone){
+    if(this.Position === 0 && !this._gone){
         this._gone = true;
         this.DoStuffWhenGone();
     }
     
-    // if a person reaches position 2, it counts as been at the fence
-    if(this.Position === 2 && !this._atTheFence){
-        this._atTheFence = true;
-        this._log("The " + this.Name + " is almost at the fence", 3);
-    }
+    if(this.Position === 1)
+        if(this._comming){
+            this._log("A " + this.Name + " is comming (1/" +this.Number+ ")", 3);
+        }else{
+            this._log("The " + this.Name + " is leaving (1/" +this.Number+ ")", 3);
+        }
     
+    // if a person reaches position 2
+    if(this.Position === 2)
+        if(this._comming){
+            this._log("The " + this.Name + " is almost at the fence (2/" +this.Number+ ")", 3);
+        }else{
+            this._log("The " + this.Name + " is stepping away from the fence (2/" +this.Number+ ")", 3);
+        }
+        
     // after Person arrives at the fence, it goes away
-    if(this.Position === 3){
+    if(this.Position === 3)
+        if(this._comming){
+            this._atTheFence = true;
+            this._log("The " + this.Name + " is at the fence and ready to do something (3/" +this.Number+ ")", 3);
+        }else{
+            this._log("The " + this.Name + " is turning around, away from the fence (3/" +this.Number+ ")", 3);
+        }
+    
+    if(this.Position === 4){
         this._comming = false;
-        this._log("The " + this.Name + " is at the fence", 3);
-        this.DoAtTheFenceStuff();
+        this.DoAction();
     }
 };
 
@@ -98,7 +123,7 @@ Person.prototype.DoSingleRound = function () {
  * will be overwritten by children
  * @returns {undefined}
  */
-Person.prototype.DoAtTheFenceStuff = function () {};
+Person.prototype.DoAction = function () {};
 
 /**
  * can be overwritten by children
@@ -145,3 +170,4 @@ Person.GetNobody = function(){
     return p;
 };
 
+Person.NumberPool = 0;

@@ -11,18 +11,21 @@ TallChild.prototype.constructor = TallChild;
  * @returns {undefined}
  */
 TallChild.prototype.Initialize = function () {
-
     this.Pic = this.Engine.MediaManager.GetImage("tallchild");
     this._setNerves(Random.GetNumber(Rules.Person.TallChild.Nerves[0],Rules.Person.TallChild.Nerves[4]));
-    this._log("A " + this.Name + " is comming");
 };
 
 /**
  * Will be called if the person reaches the fence
  * @returns {undefined}
  */
-TallChild.prototype.DoAtTheFenceStuff = function () {
+TallChild.prototype.DoAction = function () {
 
+    if(this._scared){
+        this._log(this.Name + " is scared.", 2);
+        return;
+    }
+    
     var res = Random.DrawLot(Rules.Person.TallChild.ActionLabels, Rules.Person.TallChild.ActionChances);
     
     if(res === "play"){

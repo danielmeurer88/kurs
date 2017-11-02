@@ -14,14 +14,18 @@ SmallChild.prototype.Initialize = function () {
 
     this.Pic = this.Engine.MediaManager.GetImage("smallchild");
     this._setNerves(Random.GetNumber(Rules.Person.SmallChild.Nerves[0],Rules.Person.SmallChild.Nerves[1]));
-    this._log("A " + this.Name + " is comming", 2);
 };
 
 /**
  * Will be called if the person reaches the fence
  * @returns {undefined}
  */
-SmallChild.prototype.DoAtTheFenceStuff = function () {
+SmallChild.prototype.DoAction = function () {
+    
+    if(this._scared){
+        this._log(this.Name + " is scared.", 2);
+        return;
+    }
     
     var res = Random.DrawLot(Rules.Person.SmallChild.ActionLabels, Rules.Person.SmallChild.ActionChances);
     var num;

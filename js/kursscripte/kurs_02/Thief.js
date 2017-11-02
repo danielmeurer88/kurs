@@ -19,14 +19,19 @@ Thief.prototype.Initialize = function () {
     this.Pic = this.Engine.MediaManager.GetImage("thief");
     this._internalThreshold = Random.GetNumber(Rules.Person.Thief.Stealings[0], Rules.Person.Thief.Stealings[1]);
     this._setNerves(Random.GetNumber(Rules.Person.Thief.Nerves[0],Rules.Person.SmallChild.Nerves[1]));
-    this._log("A " + this.Name + " is comming", 2);
 };
 
 /**
  * Will be called if the person reaches the fence
  * @returns {undefined}
  */
-Thief.prototype.DoAtTheFenceStuff = function () {
+Thief.prototype.DoAction = function () {
+    
+    if(this._scared){
+        this._log(this.Name + " is scared.", 2);
+        return;
+    }
+    
     this._internalCounter++;
     //steal
     var steal = Random.GetNumber(Rules.Person.Thief.GoldSteal[0],Rules.Person.Thief.GoldSteal[1]);

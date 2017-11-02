@@ -14,7 +14,9 @@ function DoggyGUI() {
         Start : {},
         Pause : {},
         Step : {},
-        Download : {}
+        Download : {},
+        FastForward : {},
+        ForwardEnd : {}
     };
     
     this.Pics = {
@@ -51,13 +53,13 @@ DoggyGUI.prototype.Initialize = function () {
     
     this.Engine.SetSelectedObject(this);
     this.Dog = new Dog();
-    this.Chest = new Chest();
+    this.Chest = new Chest();    
     this.Person = Person.GetNobody();
     
-    this._nextCreation = Random.GetNumber(2, 6);
+    this._nextCreation = Random.GetNumber(Rules.StartCreation[0], Rules.StartCreation[1]);
     
     this.Button.Start = new Button({
-        X:10, Y: this.Height - 50, Width:180, Height:40,
+        X:10, Y: this.Height - 50, Width:80, Height:40,
         Label : "Start",
         TextColor: "white", FontHeight: 18,
         TriggerCallbackObject : function (engine) {
@@ -72,7 +74,7 @@ DoggyGUI.prototype.Initialize = function () {
     );
     
     this.Button.Pause = new Button({
-        X:200, Y: this.Height - 50, Width:150, Height:40,
+        X:this.Button.Start.X + this.Button.Start.Width + 10, Y: this.Height - 50, Width:60, Height:40,
         Label : "Pause",
         TextColor: "white", FontHeight: 18,
         TriggerCallbackObject : function (engine) {
@@ -87,16 +89,46 @@ DoggyGUI.prototype.Initialize = function () {
     );
     
     this.Button.Step = new Button({
-        X:360, Y: this.Height - 50, Width:150, Height:40,
+        X:this.Button.Pause.X + this.Button.Pause.Width + 10, Y: this.Height - 50, Width:80, Height:40,
         Label : "Step",
         TextColor: "white", FontHeight: 18,
-        TriggerCallbackObject : function (engine) {
+        TriggerCallbackObject : function () {
                 this._doSingleRound();
-            }.getCallbackObject(this, this.Engine),
+            }.getCallbackObject(this),
         HoverText : "next round".decodeURI()
     });
     this.Button.Step.AddButtonEffect();
     this.Button.Step.SetActiveFunctionObject(
+            //Step-Button will be active when game is running
+            function(){return !this._running;}.getCallbackObject(this)
+    );
+    
+    this.Button.FastForward = new Button({
+        X:this.Button.Step.X + this.Button.Step.Width + 10, Y: this.Height - 50, Width:80, Height:40,
+        Label : "FF",
+        TextColor: "white", FontHeight: 18,
+        TriggerCallbackObject : function () {
+                this.FastForward(10);
+            }.getCallbackObject(this),
+        HoverText : "next 10 rounds".decodeURI()
+    });
+    this.Button.FastForward.AddButtonEffect();
+    this.Button.FastForward.SetActiveFunctionObject(
+            //Step-Button will be active when game is running
+            function(){return !this._running;}.getCallbackObject(this)
+    );
+    
+    this.Button.ForwardEnd = new Button({
+        X:this.Button.FastForward.X + this.Button.FastForward.Width + 10, Y: this.Height - 50, Width:80, Height:40,
+        Label : "FEnd",
+        TextColor: "white", FontHeight: 18,
+        TriggerCallbackObject : function () {
+                this.FastForward();
+            }.getCallbackObject(this),
+        HoverText : "jumps to the End".decodeURI()
+    });
+    this.Button.ForwardEnd.AddButtonEffect();
+    this.Button.ForwardEnd.SetActiveFunctionObject(
             //Step-Button will be active when game is running
             function(){return !this._running;}.getCallbackObject(this)
     );
@@ -125,6 +157,8 @@ DoggyGUI.prototype.Update = function () {
     this.Button.Pause.Update();
     this.Button.Step.Update();
     this.Button.Download.Update();
+    this.Button.FastForward.Update();
+    this.Button.ForwardEnd.Update();
     
     this.Chest.Update();
     this.Person.Update();
@@ -146,6 +180,8 @@ DoggyGUI.prototype.ProcessInput = function () {
     this.Button.Pause.ProcessInput();
     this.Button.Step.ProcessInput();
     this.Button.Download.ProcessInput();
+    this.Button.FastForward.ProcessInput();
+    this.Button.ForwardEnd.ProcessInput();
     
     this.Chest.ProcessInput();
     this.Person.ProcessInput();
@@ -240,11 +276,11 @@ DoggyGUI.prototype.Draw = function (c) {
     // printing number of rounds
     c.setFontHeight(20);
     c.textAlign = "left";
-    var x = this.Button.Step.X + this.Button.Step.Width;
+    x = this.Width / 2 + 50;
     c.fillStyle = "#ffffff";
-    c.fillText("Round: ", x+10, this.Height - 40);
+    c.fillText("Round: ", x+10, y+6); // +6 = difference between fontsize of printing gold (26) and round (20)
     x += c.measureText("Round: ").width;
-    c.fillText(this.Round, x + 30, this.Height - 40);
+    c.fillText(this.Round, x + 30, y+6);
         
     c.restore();
 
@@ -252,14 +288,21 @@ DoggyGUI.prototype.Draw = function (c) {
     this.Button.Pause.Draw(c);
     this.Button.Step.Draw(c);
     this.Button.Download.Draw(c);
+    this.Button.FastForward.Draw(c);
+    this.Button.ForwardEnd.Draw(c);
 };
 
 DoggyGUI.prototype._log = function (txt, header) {
     // header: size of text: 3 = normal, 2 = slightly bigger, 1 = big, 0 = Start, End    
     console.log(txt);
     this.Log.push({txt:txt, header:header});
-    if(typeof logArray === "undefined") return;
-        logArray.push({txt:txt, header:header});
+};
+
+DoggyGUI.prototype._stateStatus = function(){
+    
+    var d = this.Dog;
+    var txt = "STATUS - Energy: {0}, Hunger: {1}, Thirst: {2}, Gold: {3}".format(d.GetEnergy(), d.GetHunger(), d.GetThirst(), this.Chest.GetGold());
+    this._log(txt, 2);
 };
 
 DoggyGUI.prototype._doSingleRound = function () {
@@ -270,7 +313,10 @@ DoggyGUI.prototype._doSingleRound = function () {
     this._ts_lastround = Date.now();
     this.Round++;
     
+    this.PersonCreation();
+    
     this.Dog.DoSingleRound(); // dog needs to be first in order to be able to prevent stealing
+    
     this.Person.DoSingleRound();
     
     // if the person stole all the money
@@ -280,14 +326,14 @@ DoggyGUI.prototype._doSingleRound = function () {
     }
     
     this.Dog.ResolveRound();
-    
-    this.PersonCreation();
+        
+    this._stateStatus();
 };
 
 DoggyGUI.prototype._getPerson = function () {
     
     var p = this.Person;
-    if(p.Position >= 1) return p;
+    if(p.Position >= 2) return p;
     
     return Person.GetNobody();
 };
@@ -319,7 +365,7 @@ DoggyGUI.prototype.PersonCreation = function () {
     var labels = Rules.CharacterLabels;
     var chances = Rules.CharacterChances;
     var lot = Random.DrawLot(labels, chances);
-        
+            
     if(lot === "SmallChild"){
         this.Person = new SmallChild();
     }

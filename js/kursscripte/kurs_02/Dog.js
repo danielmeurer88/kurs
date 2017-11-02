@@ -108,13 +108,7 @@ Dog.prototype.Bark = function (target) {
             this._currentTarget = target;
             return;
     }
-    
-    if(this._energy < (this.EnergyCosts.Barking)){
-        this._currentActivity = "idling";
-        this._log(this.Name + "tries to bark but energy is too low", 3);
-        return;
-    }
-    
+        
     this._currentActivity = "idling";
     this._log(this.Name + "tries to bark but nobody is in front of the fence", 3);
     
@@ -127,13 +121,7 @@ Dog.prototype.Growl = function (target) {
             this._currentTarget = target;
             return;
     }
-    
-    if(this._energy < (this.EnergyCosts.Growling)){
-        this._currentActivity = "idling";
-        this._log(this.Name + "tries to growl but energy is too low", 3);
-        return;
-    }
-    
+        
     this._currentActivity = "idling";
     this._log(this.Name + "tries to growl but nobody is in front of the fence", 3);
 };
@@ -141,6 +129,11 @@ Dog.prototype.Growl = function (target) {
 Dog.prototype.Eat = function () {
     this._currentTarget = Person.GetNobody();
     this._currentActivity = "eating";
+};
+
+Dog.prototype.Idle = function () {
+    this._currentTarget = Person.GetNobody();
+    this._currentActivity = "idling";
 };
 
 Dog.prototype.Drink = function () {
@@ -170,11 +163,11 @@ Dog.prototype.ResolveRound = function () {
     this._thirst -= this._thirstDecrease;
     forceRange(this,"_thirst", 0,100);
     
-    if(this._currentActivity!== "eating" && this._hunger < this._hungerThreshold){
+    if(this._currentActivity!== "eating" && this.IsHungry()){
         this._energy -= this.EnergyCosts.Hungry;
         this._log(this.Name + " is hungry and loses " + this.EnergyCosts.Hungry + " energy", 2);
     }
-    if(this._currentActivity!== "drinking" && this._thirst < this._thirstThreshold){
+    if(this._currentActivity!== "drinking" && this.IsThirsty()){
         this._energy -= this.EnergyCosts.Thirsty;
         this._log(this.Name + " is thirsty and loses " + this.EnergyCosts.Thirsty + " energy", 2);
     }
@@ -187,7 +180,15 @@ Dog.prototype.ResolveRound = function () {
     
     if(this._currentActivity === "resting"){
         this._currentTarget = Person.GetNobody();
-        this._energy += this.EnergyCosts.Resting;
+        var gain = this.EnergyCosts.Resting;
+        
+        if(this.IsHungry())
+            gain -= this.EnergyCosts.Hungry;
+        
+        if(this.IsThirsty())
+            gain -= this.EnergyCosts.Thirsty;
+        
+        this._energy += gain;
         forceRange(this,"_energy", 0,100);
         this._log(this.Name + " is resting and gains " + this.EnergyCosts.Resting + " energy", 3);
     }
@@ -205,18 +206,26 @@ Dog.prototype.ResolveRound = function () {
     }
         
     if(this._currentActivity === "barking"){
-        this._energy -= this.EnergyCosts.Barking;
-        forceRange(this,"_energy", 0,100);
-        this._log(this.Name + " barks and loses " + this.EnergyCosts.Barking + " energy", 2);
-        this._currentTarget._receiveAggression( this.EnergyCosts.Barking*(-1) );
+        if(this.IsAbleToBark()){
+            this._energy -= this.EnergyCosts.Barking;
+            forceRange(this,"_energy", 0,100);
+            this._log(this.Name + " barks and loses " + this.EnergyCosts.Barking + " energy", 2);
+            this._currentTarget._receiveAggression( this.EnergyCosts.Barking );
+        }else{
+            this._log(this.Name + " is too weak and was not able to bark", 2);
+        }
         return false;
     }
     
     if(this._currentActivity === "growling"){
-        this._energy -= this.EnergyCosts.Growling;
-        forceRange(this,"_energy", 0,100);
-        this._log(this.Name + " growls and loses " + this.EnergyCosts.Growling + " energy", 2);
-        this._currentTarget._receiveAggression( this.EnergyCosts.Growling*(-1));
+        if(this.IsAbleToGrowl()){
+            this._energy -= this.EnergyCosts.Growling;
+            forceRange(this,"_energy", 0,100);
+            this._log(this.Name + " growls and loses " + this.EnergyCosts.Growling + " energy", 2);
+            this._currentTarget._receiveAggression( this.EnergyCosts.Growling);
+        }else{
+            this._log(this.Name + " is too weak and was not able to growl", 2);
+        }
         return false;
     }
 };
@@ -239,4 +248,44 @@ Dog.prototype.GetThirst = function () {
 Dog.prototype.GetActivity = function () {
     return this._currentActivity;
     
+};
+
+Dog.prototype.IsHungry = function () {
+    return (this._hunger < this._hungerThreshold) ? true : false;    
+};
+
+Dog.prototype.IsThirsty = function () {
+    return (this._thirst < this._thirstThreshold) ? true : false;    
+};
+
+Dog.prototype.IsAbleToBark = function () {
+    var needed = this.EnergyCosts.Barking;
+    var deductions = 0;
+    
+    if(this.IsHungry())
+        deductions += this.EnergyCosts.Hungry;
+    
+    if(this.IsThirsty())
+        deductions += this.EnergyCosts.Thirsty;
+    
+    if(this._energy - needed /*- deductions*/ >= 0)
+        return true;
+    else
+        return false;
+};
+
+Dog.prototype.IsAbleToGrowl = function () {
+    var needed = this.EnergyCosts.Growling;
+    var deductions = 0;
+    
+    if(this.IsHungry())
+        deductions += this.EnergyCosts.Hungry;
+    
+    if(this.IsThirsty())
+        deductions += this.EnergyCosts.Thirsty;
+    
+    if(this._energy - needed /*- deductions*/ >= 0)
+        return true;
+    else
+        return false;
 };
