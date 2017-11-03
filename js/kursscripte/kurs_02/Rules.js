@@ -1,6 +1,7 @@
 
 
 var Rules = {};
+Rules.Version = "0.8.3";
 Rules.CharacterLabels = ["Nothing", "SmallChild", "TallChild", "Thief"];
 Rules.CharacterChances = [30, 27, 25, 18];
 Rules.StartCreation = [2,4];
@@ -16,10 +17,14 @@ Rules.Dog.Energy = {
 };  
 Rules.Dog.EatingIncrease = 8;
 Rules.Dog.DrinkingIncrease = 8;
+Rules.Dog.EnergyThreshold = 15;
+Rules.Dog.EnergyWarning = Rules.Dog.EnergyThreshold + (100 - Rules.Dog.EnergyThreshold) / 2;
 Rules.Dog.HungerDecrease = 3;
 Rules.Dog.HungerThreshold = 15;
+Rules.Dog.HungerWarning = Rules.Dog.HungerThreshold + (100 - Rules.Dog.HungerThreshold) / 2;
 Rules.Dog.ThirstDecrease = 4;
 Rules.Dog.ThirstThreshold = 20;
+Rules.Dog.ThirstWarning = Rules.Dog.ThirstThreshold + (100 - Rules.Dog.ThirstThreshold) / 2;
 
 Rules.Person = {};
 Rules.Person.SmallChild = {

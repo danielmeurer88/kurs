@@ -70,7 +70,7 @@ DoggyGUI.prototype.Initialize = function () {
     this.Button.Start.AddButtonEffect();
     this.Button.Start.SetActiveFunctionObject(
             //Start-Button will be active when game is stopped
-            function(){return !this._running;}.getCallbackObject(this)
+            function(){return !this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
     this.Button.Pause = new Button({
@@ -85,7 +85,7 @@ DoggyGUI.prototype.Initialize = function () {
     this.Button.Pause.AddButtonEffect();
     this.Button.Pause.SetActiveFunctionObject(
             //Pause-Button will be active when game is running
-            function(){return this._running;}.getCallbackObject(this)
+            function(){return this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
     this.Button.Step = new Button({
@@ -100,7 +100,7 @@ DoggyGUI.prototype.Initialize = function () {
     this.Button.Step.AddButtonEffect();
     this.Button.Step.SetActiveFunctionObject(
             //Step-Button will be active when game is running
-            function(){return !this._running;}.getCallbackObject(this)
+            function(){return !this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
     this.Button.FastForward = new Button({
@@ -115,7 +115,7 @@ DoggyGUI.prototype.Initialize = function () {
     this.Button.FastForward.AddButtonEffect();
     this.Button.FastForward.SetActiveFunctionObject(
             //Step-Button will be active when game is running
-            function(){return !this._running;}.getCallbackObject(this)
+            function(){return !this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
     this.Button.ForwardEnd = new Button({
@@ -130,7 +130,7 @@ DoggyGUI.prototype.Initialize = function () {
     this.Button.ForwardEnd.AddButtonEffect();
     this.Button.ForwardEnd.SetActiveFunctionObject(
             //Step-Button will be active when game is running
-            function(){return !this._running;}.getCallbackObject(this)
+            function(){return !this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
     this.Button.Download = new Button(
@@ -232,7 +232,12 @@ DoggyGUI.prototype.Draw = function (c) {
     // Energy bar
     c.fillStyle = "#999";
     c.fillRect(x + space + barspace, y , 200, 16);
-    c.fillStyle = "#00ff00";
+    // what color - green, yellow or red?
+    c.fillStyle = "#00ff00"; // default green
+    if(en < Rules.Dog.EnergyWarning) // energy smaller warning value -> yellow
+        c.fillStyle = "yellow";
+    if(en < Rules.Dog.EnergyThreshold)
+        c.fillStyle = "red";
     c.fillRect(x + space + barspace, y+1 , en*2, 14);
         
     // Hunger
@@ -246,7 +251,12 @@ DoggyGUI.prototype.Draw = function (c) {
     // Hunger bar
     c.fillStyle = "#999";
     c.fillRect(x + space + barspace, y , 200, 16);
-    c.fillStyle = "#00ff00";
+    // what color - green, yellow or red?
+    c.fillStyle = "#00ff00"; // default green
+    if(hu < Rules.Dog.HungerWarning) // energy smaller warning value -> yellow
+        c.fillStyle = "yellow";
+    if(hu < Rules.Dog.HungerThreshold)
+        c.fillStyle = "red";
     c.fillRect(x + space + barspace, y+1 , hu*2, 14);
     
     // Thirst
@@ -260,7 +270,12 @@ DoggyGUI.prototype.Draw = function (c) {
     // thirst bar
     c.fillStyle = "#999";
     c.fillRect(x + space + barspace, y , 200, 16);
-    c.fillStyle = "#00ff00";
+    // what color - green, yellow or red?
+    c.fillStyle = "#00ff00"; // default green
+    if(th < Rules.Dog.ThirstWarning) // energy smaller warning value -> yellow
+        c.fillStyle = "yellow";
+    if(th < Rules.Dog.ThirstThreshold)
+        c.fillStyle = "red";
     c.fillRect(x + space + barspace, y+1 , th*2, 14);
     
     // printing Gold
@@ -354,7 +369,7 @@ DoggyGUI.prototype._getPerson = function () {
 };
 
 DoggyGUI.prototype.Lose = function () {
-    var txt = "----> You made it to the " + this.Round + ". Round.";
+    var txt = "----> GAME OVER - You made it to the " + this.Round + ". Round.";
     this._log(txt, 0);    
     
     this._running = false;
@@ -478,18 +493,23 @@ DoggyGUI.prototype.DownloadPDF = function () {
         
         pagey += (fontSize_normal + fontSpace) * ptcmcr;
         
-        if(pagey > pagemax){
+        if(i < this.Log.length-1 && pagey > pagemax){
             doc.addPage();
             pagey = border;
         }
         
     }
     
-    var rulestr = JSON.stringify(Rules);
-    var hash = sha256.hmac("test", rulestr);
     doc.setFontSize(1);
     doc.setTextColor(255, 255, 255);
-    doc.text(hash, border, pagey);
+    doc.text(this._getRulesHash(), border, pagey);
     
     doc.save(name + ".pdf");
+};
+
+DoggyGUI.prototype._getRulesHash = function () {
+    var hash = "v" + Rules.Version;
+    if(!sha256 || !sha256.hmac) return hash;
+    var rulestr = JSON.stringify(Rules);
+    return hash + "_" + sha256.hmac("test", rulestr);
 };
