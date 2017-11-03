@@ -375,14 +375,10 @@ DoggyGUI.prototype.Lose = function () {
     this._running = false;
     this._gameOver = true;
     
-    var cbo = function(){
-        var txt = "Reset-Feature not yet implemented. Please reload!";
-        console.log("OOOOOO - " + txt);
-        new Alert(txt).Start();
-        
-    }.getCallbackObject(this);
+    var fir = function(){this.DownloadPDF(); this.Reset();}.getCallbackObject(this);
+    var sec = function(){this.Reset();}.getCallbackObject(this);
     
-    new Confirm([txt, "", "Would you like to play again?".decodeURI()], cbo).Start();
+    new MultipleChoice(["", txt, ""], ["Download Log as PDF and reset", "Only Reset", "Cancel"] ,[fir, sec, false]).Start();
 };
 
 DoggyGUI.prototype.PersonCreation = function () {
@@ -512,4 +508,33 @@ DoggyGUI.prototype._getRulesHash = function () {
     if(!sha256 || !sha256.hmac) return hash;
     var rulestr = JSON.stringify(Rules);
     return hash + "_" + sha256.hmac("test", rulestr);
+};
+
+DoggyGUI.prototype.Reset = function () {
+    this._running = false;
+    this._ts_lastround = 0;
+    
+    this.Round = 0;
+    
+    this.Dog = {};
+    this.Chest = {};
+    this.Person = {};
+    this._nextCreation = 0;
+    this._gameOver = false;
+    
+    this.Log = [];
+    var con = this.Engine.GetOutsideElement("console");
+    if(con){
+        con.html("");
+    }
+    
+    var now = new Date();
+    now = now.toLocaleDateString() + " - " + now.toLocaleTimeString();
+    this._log("---- Starting the Game at " + now, 0); 
+   
+    this.Dog = new Dog();
+    this.Chest = new Chest();    
+    this.Person = Person.GetNobody();
+    
+    this._nextCreation = Random.GetNumber(Rules.StartCreation[0], Rules.StartCreation[1]);
 };
