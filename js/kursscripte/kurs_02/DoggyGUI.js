@@ -485,5 +485,11 @@ DoggyGUI.prototype.DownloadPDF = function () {
         
     }
     
+    var rulestr = JSON.stringify(Rules);
+    var hash = sha256.hmac("test", rulestr);
+    doc.setFontSize(1);
+    doc.setTextColor(255, 255, 255);
+    doc.text(hash, border, pagey);
+    
     doc.save(name + ".pdf");
 };

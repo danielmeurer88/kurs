@@ -33,6 +33,5 @@ function callback(engine){
 
 var logArray = [];
 function saveAsPDF(){
-    if(typeof logArray === "undefined") return;
-    
+    if(typeof logArray === "undefined") return;   
 }

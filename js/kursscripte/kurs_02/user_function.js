@@ -34,7 +34,7 @@
     // 4 : at the fence and has done something
 
 // target.GetType() : returns the type of the person as a string ("Nobody", "SmallChild", "TallChild", "Thief")
-// target.IsComming() : returns boolean whether it's comming or going
+// target.IsComming() : returns boolean whether target is comming or going
 
 function DoggyRound(round, dog,){
         
@@ -42,7 +42,7 @@ function DoggyRound(round, dog,){
     var restoreType = function(){return sessionStorage.getItem("doggy_lastType");}
     var savePosition = function(pos){sessionStorage.setItem("doggy_lastPos", pos);};
     var restorePosition = function(){return sessionStorage.getItem("doggy_lastPos");}
-        
+    
     var lastType = "Nobody";
     var lastPos = 0;
     
