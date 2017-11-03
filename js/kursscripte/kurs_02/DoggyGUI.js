@@ -296,6 +296,21 @@ DoggyGUI.prototype._log = function (txt, header) {
     // header: size of text: 3 = normal, 2 = slightly bigger, 1 = big, 0 = Start, End    
     console.log(txt);
     this.Log.push({txt:txt, header:header});
+    var con = this.Engine.GetOutsideElement("console");
+    if(con){
+        con.append("<p class='line line{0}'>{1}</p>".format(header, txt));
+
+        var height = con.height();
+        var scroll = 0;
+        var content = con.contents();
+        var el;
+        for(var i=0; i<content.length; i++){
+            el = content[i];
+            scroll += $(el).outerHeight(true);
+        }
+        scroll = (scroll-height < 0) ? 0 : scroll-height;
+        con.scrollTop(scroll);
+    }
 };
 
 DoggyGUI.prototype._stateStatus = function(){

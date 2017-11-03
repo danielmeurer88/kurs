@@ -25,7 +25,8 @@ function callback(engine){
     var dgui = new DoggyGUI();
     
     engine.AddObject(dgui);
-     
+    engine.AddOutsideElement("Console", "console");
+    
     engine.Start();
 	
 }
