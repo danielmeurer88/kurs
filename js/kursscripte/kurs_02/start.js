@@ -15,9 +15,7 @@ $(document).ready(function () {
 	];
 	
     engine.MediaManager.SetMediaPack(mediapack, callback.getCallbackObject(engine,engine));
-    
-    $("#PDF").click(saveAsPDF);
-    
+        
 });
 
 function callback(engine){
@@ -29,9 +27,4 @@ function callback(engine){
     
     engine.Start();
 	
-}
-
-var logArray = [];
-function saveAsPDF(){
-    if(typeof logArray === "undefined") return;   
 }

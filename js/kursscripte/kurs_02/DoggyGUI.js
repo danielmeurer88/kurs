@@ -8,7 +8,7 @@ function DoggyGUI() {
     
     this._running = false;
     this._ts_lastround = 0;
-    this.DOR = 1600; // duration of a round
+    this.DOR = 1500; // duration of a round
     
     this.Button = {
         Start : {},
@@ -24,6 +24,7 @@ function DoggyGUI() {
     };
     
     this.Round = 0;
+    this._fastForwardEnd = 0;
     
     this.Dog = {};
     this.Chest = {};
@@ -434,7 +435,7 @@ DoggyGUI.prototype.GiveDog = function (what, num) {
 
 DoggyGUI.prototype.FastForward = function (rounds) {
 
-	var breakend = 5000;
+	var breakingPoint = 5000;
 	var tillEnd = false;
 	var i=0;
 	
@@ -443,22 +444,40 @@ DoggyGUI.prototype.FastForward = function (rounds) {
 	}
 	
 	if(tillEnd){
-		
-		while(!this._gameOver && i<breakend){
-			this._doSingleRound();
-			i++;
-		}
+            this._fastForwardEnd = this.Round + breakingPoint;
+            this._fastForwardCover(this);
 		
 	}else{
-		for(i=0; i<rounds && i<breakend; i++)
-			this._doSingleRound();
+            this._fastForwardEnd = this.Round + rounds;
+            this._fastForwardCover(this);
 	}
 	
     
 };
 
+DoggyGUI.prototype._fastForwardCover = function (that) {
+    if(!that._gameOver && that.Round<that._fastForwardEnd){
+        that._doSingleRound();
+        window.setTimeout(function(that){
+            that._doSingleRound();
+            that._fastForwardCover(that);
+        }, 100, that);
+        
+    }
+};
+
 DoggyGUI.prototype.DownloadPDF = function () {
-    var name = prompt("Name of the file");
+    
+    var cbo = function(name){
+        this._createPDF(name);
+    }.getCallbackObject(this);
+    
+    new Prompt("Name of the file (without the extension)", cbo).Start();
+};
+
+DoggyGUI.prototype._createPDF = function (name) {
+    if(typeof name !== "string")
+        name = prompt("Name of the file");
     var doc = new jsPDF();
     
     var border = 15;
@@ -472,15 +491,7 @@ DoggyGUI.prototype.DownloadPDF = function () {
     
     // setFontSize handles arguments as a number in points
     var ptcmcr = 0.5; // points to cm conversion rate
-    
-    // Title
-    doc.setFontSize(fontSize_normal + 2);
-    var now = new Date();
-    now = now.toLocaleDateString() + " - " + now.toLocaleTimeString() + " Uhr";
-    var title = "Game played on: " + now;
-    doc.text(title, border, pagey);
-    pagey += (fontSize_normal + 2 + fontSpace) * ptcmcr;
-    
+        
     // rest of the log
     for(var i=0; i<this.Log.length; i++){
         
