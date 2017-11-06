@@ -36,7 +36,13 @@
 // target.GetType() : returns the type of the person as a string ("Nobody", "SmallChild", "TallChild", "Thief")
 // target.IsComming() : returns boolean whether target is comming or going
 
+/**
+ * you can determine what the dog is going to do in the respective round
+ * @param {integer} round - the current round
+ * @param {object} dog - the instance of the Dog
+ * @returns {undefined}
+ */
 function DoggyRound(round, dog,){
-	// add code here
+    // add code here
 	
 }
