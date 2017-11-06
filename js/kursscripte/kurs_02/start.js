@@ -26,5 +26,25 @@ function callback(engine){
     engine.AddOutsideElement("Console", "console");
     
     engine.Start();
-	
+
 }
+
+function debugTest(){
+    console.log("debugTest()");    
+    
+    var fir = function(){console.log("Choice one");}.getCallbackObject(this);
+    var sec = function(){
+		console.log("Choice two");
+		
+		var innercbo = function(name){
+			console.log("sec-cbo - Prompt(name something)");
+		}.getCallbackObject(this);
+		
+		new Prompt("Name of something", innercbo).Start();
+			
+		}.getCallbackObject(this);
+    
+    new MultipleChoice(["", "Choose one", ""], ["Choice 1", "Choice 2", "Cancel"] ,[fir, sec, false]).Start();
+
+}
+

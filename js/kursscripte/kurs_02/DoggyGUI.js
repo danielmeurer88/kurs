@@ -308,6 +308,12 @@ DoggyGUI.prototype.Draw = function (c) {
     this.Button.ForwardEnd.Draw(c);
 };
 
+/**
+ * Write a text as a log file - to the developer console, html console and to an array for the creation of the pdf
+ * @param {string} txt - 
+ * @param {number} header - the number of the header, which resolves to a bigger fontsize and color in the html-console
+ * @returns {undefined}
+ */
 DoggyGUI.prototype._log = function (txt, header) {
     // header: size of text: 3 = normal, 2 = slightly bigger, 1 = big, 0 = Start, End    
     console.log(txt);
@@ -328,14 +334,20 @@ DoggyGUI.prototype._log = function (txt, header) {
         con.scrollTop(scroll);
     }
 };
-
+/**
+ * logs the current state of the game
+ * @returns {undefined}
+ */
 DoggyGUI.prototype._stateStatus = function(){
     
     var d = this.Dog;
     var txt = "STATUS - Energy: {0}, Hunger: {1}, Thirst: {2}, Gold: {3}".format(d.GetEnergy(), d.GetHunger(), d.GetThirst(), this.Chest.GetGold());
     this._log(txt, 2);
 };
-
+/**
+ * executes one round
+ * @returns {undefined}
+ */
 DoggyGUI.prototype._doSingleRound = function () {
     
     if(this._gameOver) return;
@@ -348,16 +360,35 @@ DoggyGUI.prototype._doSingleRound = function () {
     
     this.Dog.DoSingleRound(); // dog needs to be first in order to be able to prevent stealing
     
-    this.Person.DoSingleRound();
+    var dogen = this.Dog._energy;
+    
+    if(dogen >= Rules.Dog.EnergyWarning){
+        // if the energy is high enough -> dog strikes first
+        this.Dog.ResolveRound();
+        this.Person.DoSingleRound();
+    }else{
+        if(dogen < Rules.Dog.EnergyThreshold){
+            // if the energy is below treshold -> person strikes first
+            this.Person.DoSingleRound();
+            this.Dog.ResolveRound();
+        }else{
+            //if energy is in between -> action order at random
+            var lot = Random.DrawLot(Rules.FirstActionWhenInBetweenLabels,Rules.FirstActionWhenInBetweenChances);
+            if(lot === "dog"){
+                this.Dog.ResolveRound();
+                this.Person.DoSingleRound();
+            }else{
+                this.Person.DoSingleRound();
+                this.Dog.ResolveRound();
+            }
+        }
+    }
     
     // if the person stole all the money
     if(this.Chest._gold <= 0){
         this.Lose();
         return;
-    }
-    
-    this.Dog.ResolveRound();
-        
+    }    
     this._stateStatus();
 };
 
@@ -376,7 +407,11 @@ DoggyGUI.prototype.Lose = function () {
     this._running = false;
     this._gameOver = true;
     
-    var fir = function(){this.DownloadPDF(); this.Reset();}.getCallbackObject(this);
+    var fir = function(){
+		var resetcbo = function(){this.Reset();}.getCallbackObject(this);
+		this.DownloadPDF(resetcbo);
+	
+	}.getCallbackObject(this);
     var sec = function(){this.Reset();}.getCallbackObject(this);
     
     new MultipleChoice(["", txt, ""], ["Download Log as PDF and reset", "Only Reset", "Cancel"] ,[fir, sec, false]).Start();
@@ -466,13 +501,13 @@ DoggyGUI.prototype._fastForwardCover = function (that) {
     }
 };
 
-DoggyGUI.prototype.DownloadPDF = function () {
+DoggyGUI.prototype.DownloadPDF = function (cbo) {
     
     var cbo = function(name){
         this._createPDF(name);
     }.getCallbackObject(this);
     
-    new Prompt("Name of the file (without the extension)", cbo).Start();
+    new Prompt("Name of the file (without the extension)", cbo).Start(cbo);
 };
 
 DoggyGUI.prototype._createPDF = function (name) {
@@ -533,16 +568,17 @@ DoggyGUI.prototype.Reset = function () {
     this._nextCreation = 0;
     this._gameOver = false;
     
-    this.Log = [];
+    
     var con = this.Engine.GetOutsideElement("console");
     if(con){
         con.html("");
     }
     
+    this.Log = [];
     var now = new Date();
     now = now.toLocaleDateString() + " - " + now.toLocaleTimeString();
-    this._log("---- Starting the Game at " + now, 0); 
-   
+    this._log("---- Starting the Game at " + now, 0);
+        
     this.Dog = new Dog();
     this.Chest = new Chest();    
     this.Person = Person.GetNobody();
