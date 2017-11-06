@@ -358,32 +358,10 @@ DoggyGUI.prototype._doSingleRound = function () {
     
     this.PersonCreation();
     
-    this.Dog.DoSingleRound(); // dog needs to be first in order to be able to prevent stealing
-    
-    var dogen = this.Dog._energy;
-    
-    if(dogen >= Rules.Dog.EnergyWarning){
-        // if the energy is high enough -> dog strikes first
-        this.Dog.ResolveRound();
-        this.Person.DoSingleRound();
-    }else{
-        if(dogen < Rules.Dog.EnergyThreshold){
-            // if the energy is below treshold -> person strikes first
-            this.Person.DoSingleRound();
-            this.Dog.ResolveRound();
-        }else{
-            //if energy is in between -> action order at random
-            var lot = Random.DrawLot(Rules.FirstActionWhenInBetweenLabels,Rules.FirstActionWhenInBetweenChances);
-            if(lot === "dog"){
-                this.Dog.ResolveRound();
-                this.Person.DoSingleRound();
-            }else{
-                this.Person.DoSingleRound();
-                this.Dog.ResolveRound();
-            }
-        }
-    }
-    
+    this.Dog.DetermineActivity();
+    this.Person.DoSingleRound();
+    this.Dog.ResolveRound();
+     
     // if the person stole all the money
     if(this.Chest._gold <= 0){
         this.Lose();
@@ -395,7 +373,7 @@ DoggyGUI.prototype._doSingleRound = function () {
 DoggyGUI.prototype._getPerson = function () {
     
     var p = this.Person;
-    if(p.Position >= 2) return p;
+    if(p.Position >= 1) return p;
     
     return Person.GetNobody();
 };
@@ -427,7 +405,7 @@ DoggyGUI.prototype.PersonCreation = function () {
     var labels = Rules.CharacterLabels;
     var chances = Rules.CharacterChances;
     var lot = Random.DrawLot(labels, chances);
-            
+       
     if(lot === "SmallChild"){
         this.Person = new SmallChild();
     }
@@ -448,13 +426,39 @@ DoggyGUI.prototype.ExtendCreation = function () {
 };
 
 DoggyGUI.prototype.PlayWithDog = function (num) {
-    this.Dog._currentActivity = "idling";
+    
+    var dogen = this.Dog.GetEnergy();
+    var distracted = false;
+    
+    if(dogen >= Rules.Dog.EnergyWarning){
+        // if the energy is high enough -> dog is not distracted
+
+    }else{
+        if(dogen < Rules.Dog.EnergyThreshold){
+            // if the energy is below treshold -> dog is distracted
+            distracted = true;
+        }else{
+            //if energy is in between -> disracting at random
+            var lot = Random.DrawLot(Rules.FirstActionWhenInBetweenLabels,Rules.FirstActionWhenInBetweenChances);
+            if(lot === "distracted"){
+                // dog not distracted
+                distracted = true;
+            }else{
+                // dog is distracted
+            }
+        }
+    }
+    
+    if(distracted){
+        this._log("Playing distracts the dog from " + this.Dog._currentActivity,2);
+        this.Dog._currentActivity = "idling";
+    }
+    
     this.Dog._energy -= num;
     forceRange(this.Dog,"_energy", 0,100);
 };
 
 DoggyGUI.prototype.GiveDog = function (what, num) {
-    this.Dog._currentActivity = "idling";
     
     if(what === "food"){
         this.Dog._hunger += num;

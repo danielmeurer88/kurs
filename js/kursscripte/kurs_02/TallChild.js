@@ -30,15 +30,16 @@ TallChild.prototype.DoAction = function () {
     
     if(res === "play"){
         var num = Random.GetNumber(Rules.Person.TallChild.EnergyPlay[0], Rules.Person.TallChild.EnergyPlay[1]);
+        this._log(this.Name + " plays with the dog for " + num + " energy",3);
         this.GUI.PlayWithDog(num);
-        this._log(this.Name + " plays with the dog for " + num + " energy");
+        
     }
     
     if(res === "steal"){
         //steal
         var steal = Random.GetNumber(Rules.Person.TallChild.GoldSteal[0], Rules.Person.TallChild.GoldSteal[1]);
         this.GUI.Chest.StealFrom(steal);
-        this._log(this.Name + " steals " + steal + " Gold out of the chest");
+        this._log(this.Name + " steals " + steal + " Gold out of the chest",3);
     }
 
 };

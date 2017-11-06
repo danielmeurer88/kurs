@@ -46,12 +46,12 @@ Person.prototype._receiveAggression = function (agg) {
     if(this._nerves <= 0){
         this._comming = false;
         this._scared = true;
-        this._log(this.Name + " is scared");
+        this._log(this.Name + " is scared",2);
     }
 };
 
 Person.prototype._canReceiveAggression = function () {
-    return (this.Position > 1) ? true : false;
+    return (this.Position >= 1) ? true : false;
 };
 
 Person.prototype._setNerves = function (thr) {
@@ -91,26 +91,26 @@ Person.prototype.DoSingleRound = function () {
     
     if(this.Position === 1)
         if(this._comming){
-            this._log("A " + this.Name + " is comming (1/" +this.Number+ ")", 3);
+            this._log("A " + this.Name + " is comming (Pos.1)", 3);
         }else{
-            this._log("The " + this.Name + " is leaving (1/" +this.Number+ ")", 3);
+            this._log("The " + this.Name + " is leaving (Pos.1)", 3);
         }
     
     // if a person reaches position 2
     if(this.Position === 2)
         if(this._comming){
-            this._log("The " + this.Name + " is almost at the fence (2/" +this.Number+ ")", 3);
+            this._log("The " + this.Name + " is almost at the fence (Pos.2)", 3);
         }else{
-            this._log("The " + this.Name + " is stepping away from the fence (2/" +this.Number+ ")", 3);
+            this._log("The " + this.Name + " is stepping away from the fence (Pos.2)", 3);
         }
         
     // after Person arrives at the fence, it goes away
     if(this.Position === 3)
         if(this._comming){
             this._atTheFence = true;
-            this._log("The " + this.Name + " is at the fence and ready to do something (3/" +this.Number+ ")", 3);
+            this._log("The " + this.Name + " is at the fence and ready to do something (Pos.3)", 3);
         }else{
-            this._log("The " + this.Name + " is turning around, away from the fence (3/" +this.Number+ ")", 3);
+            this._log("The " + this.Name + " is turning around, away from the fence (Pos.3)", 3);
         }
     
     if(this.Position === 4){

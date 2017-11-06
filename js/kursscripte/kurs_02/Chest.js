@@ -60,7 +60,7 @@ Chest.prototype.Draw = function (c) {
 };
 
 Chest.prototype._log = function (txt) {
-    this.GUI._log(txt);
+    this.GUI._log(txt,3);
 };
 
 

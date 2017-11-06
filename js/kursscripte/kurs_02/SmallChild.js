@@ -17,7 +17,7 @@ SmallChild.prototype.Initialize = function () {
 };
 
 /**
- * Will be called if the person reaches the fence
+ * Will be called if the person is at the fence (pos:4)
  * @returns {undefined}
  */
 SmallChild.prototype.DoAction = function () {
@@ -32,8 +32,9 @@ SmallChild.prototype.DoAction = function () {
     
     if(res === "play"){
         num = Random.GetNumber(Rules.Person.SmallChild.EnergyPlay[0], Rules.Person.SmallChild.EnergyPlay[1]);
-        this.GUI.PlayWithDog(num);
         this._log(this.Name + " plays with the dog for " + num + " energy", 3);
+        this.GUI.PlayWithDog(num);
+        
     }
     
     if(res === "feed"){

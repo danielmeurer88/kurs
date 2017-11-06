@@ -110,7 +110,7 @@ Dog.prototype.Bark = function (target) {
     }
         
     this._currentActivity = "idling";
-    this._log(this.Name + "tries to bark but nobody is in front of the fence", 3);
+    this._log(this.Name + " tries to bark but nobody is in front of the fence", 3);
     
 };
 
@@ -123,7 +123,7 @@ Dog.prototype.Growl = function (target) {
     }
         
     this._currentActivity = "idling";
-    this._log(this.Name + "tries to growl but nobody is in front of the fence", 3);
+    this._log(this.Name + " tries to growl but nobody is in front of the fence", 3);
 };
 
 Dog.prototype.Eat = function () {
@@ -149,9 +149,10 @@ Dog.prototype.Rest = function () {
     this._currentActivity = "resting";
 };
 
-Dog.prototype.DoSingleRound = function () {
+Dog.prototype.DetermineActivity = function () {
     // INVOKE USER MADE FUNCTION
     DoggyRound(this.GUI.Round, this);
+    this._log(this.Name + " is getting ready for " + this._currentActivity,3);
 };
 
 Dog.prototype.ResolveRound = function () {
@@ -175,7 +176,7 @@ Dog.prototype.ResolveRound = function () {
 
 
     if(this._currentActivity === "idling"){
-        this._log(this.Name + " idles");
+        this._log(this.Name + " idles",3);
     }
     
     if(this._currentActivity === "resting"){
@@ -190,7 +191,7 @@ Dog.prototype.ResolveRound = function () {
         
         this._energy += gain;
         forceRange(this,"_energy", 0,100);
-        this._log(this.Name + " is resting and gains " + this.EnergyCosts.Resting + " energy", 3);
+        this._log(this.Name + " is resting and gains " + gain + " energy", 3);
     }
     
     if(this._currentActivity === "drinking"){
@@ -268,7 +269,7 @@ Dog.prototype.IsAbleToBark = function () {
     if(this.IsThirsty())
         deductions += this.EnergyCosts.Thirsty;
     
-    if(this._energy - needed /*- deductions*/ >= 0)
+    if(this._energy - needed - deductions >= 0)
         return true;
     else
         return false;
@@ -284,7 +285,7 @@ Dog.prototype.IsAbleToGrowl = function () {
     if(this.IsThirsty())
         deductions += this.EnergyCosts.Thirsty;
     
-    if(this._energy - needed /*- deductions*/ >= 0)
+    if(this._energy - needed - deductions >= 0)
         return true;
     else
         return false;

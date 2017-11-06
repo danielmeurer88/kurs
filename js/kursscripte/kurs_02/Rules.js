@@ -1,14 +1,14 @@
 
 
 var Rules = {};
-Rules.Version = "0.8.3";
+Rules.Version = "0.8.4";
 Rules.CharacterLabels = ["Nothing", "SmallChild", "TallChild", "Thief"];
 Rules.CharacterChances = [30, 27, 25, 18];
 Rules.StartCreation = [2,4];
 Rules.ExtendCreation = [3,5];
 
-Rules.FirstActionWhenInBetweenLabels = ["dog", "person"];
-Rules.FirstActionWhenInBetweenChances = [6,4];
+Rules.FirstActionWhenInBetweenLabels = ["distracted", "not"];
+Rules.FirstActionWhenInBetweenChances = [7,3];
 
 Rules.Dog = {};
 Rules.Dog.Energy = {
