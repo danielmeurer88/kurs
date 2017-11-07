@@ -7,6 +7,8 @@
  */
 function DoggyRound(round, dog,){
     // add code here
+	
+	dog.Rest();
     
     var saveType = function(type){sessionStorage.setItem("doggy_lastType", type);};
     var restoreType = function(){return sessionStorage.getItem("doggy_lastType");}
