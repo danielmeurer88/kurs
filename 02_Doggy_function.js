@@ -44,7 +44,7 @@ function DoggyRound(round, dog,){
             dog.Growl(target);
     }
     
-    if(type === "TallChild" && comming && (pos === 2 || pos === 3) ){
+    if(type === "Teenager" && comming && (pos === 2 || pos === 3) ){
         dog.Bark(target);
     }
     

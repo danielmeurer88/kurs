@@ -406,12 +406,12 @@ DoggyGUI.prototype.PersonCreation = function () {
     var chances = Rules.CharacterChances;
     var lot = Random.DrawLot(labels, chances);
        
-    if(lot === "SmallChild"){
-        this.Person = new SmallChild();
+    if(lot === "Child"){
+        this.Person = new Child();
     }
     
-    if(lot === "TallChild"){
-        this.Person = new TallChild();
+    if(lot === "Teenager"){
+        this.Person = new Teenager();
     }
     
     if(lot === "Thief"){

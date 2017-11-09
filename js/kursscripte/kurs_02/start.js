@@ -8,8 +8,8 @@ $(document).ready(function () {
 		new Image({path: "./pics/chest.png", codename: "chest"}),
 		new Image({path: "./pics/dog.png", codename: "dog"}),
 		new Image({path: "./pics/dog_back.png", codename: "dog_back"}),
-		new Image({path: "./pics/smallchild.png", codename: "smallchild"}),
-		new Image({path: "./pics/tallchild.png", codename: "tallchild"}),
+		new Image({path: "./pics/child.png", codename: "child"}),
+		new Image({path: "./pics/teenager.png", codename: "teenager"}),
 		new Image({path: "./pics/thief.png", codename: "thief"}),
                 new Image({path: "./pics/disk.png", codename: "disk"})
 	];

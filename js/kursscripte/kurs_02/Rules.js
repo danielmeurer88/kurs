@@ -2,7 +2,7 @@
 
 var Rules = {};
 Rules.Version = "0.8.4";
-Rules.CharacterLabels = ["Nothing", "SmallChild", "TallChild", "Thief"];
+Rules.CharacterLabels = ["Nothing", "Child", "Teenager", "Thief"];
 Rules.CharacterChances = [30, 27, 25, 18];
 Rules.StartCreation = [2,4];
 Rules.ExtendCreation = [3,5];
@@ -30,7 +30,7 @@ Rules.Dog.ThirstThreshold = 20;
 Rules.Dog.ThirstWarning = Rules.Dog.ThirstThreshold + (100 - Rules.Dog.ThirstThreshold) / 2;
 
 Rules.Person = {};
-Rules.Person.SmallChild = {
+Rules.Person.Child = {
     Nerves : [1,3],
     ActionLabels : ["play", "feed"],
     ActionChances : [3,7],
@@ -40,7 +40,7 @@ Rules.Person.SmallChild = {
     FeedingChances : [5,5]
 };
 
-Rules.Person.TallChild = {
+Rules.Person.Teenager = {
     Nerves : [2,4],
     ActionLabels : ["play", "steal"],
     ActionChances : [3,1],

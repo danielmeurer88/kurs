@@ -18,7 +18,7 @@ Thief.prototype.Initialize = function () {
 
     this.Pic = this.Engine.MediaManager.GetImage("thief");
     this._internalThreshold = Random.GetNumber(Rules.Person.Thief.Stealings[0], Rules.Person.Thief.Stealings[1]);
-    this._setNerves(Random.GetNumber(Rules.Person.Thief.Nerves[0],Rules.Person.SmallChild.Nerves[1]));
+    this._setNerves(Random.GetNumber(Rules.Person.Thief.Nerves[0],Rules.Person.Thief.Nerves[1]));
 };
 
 /**
