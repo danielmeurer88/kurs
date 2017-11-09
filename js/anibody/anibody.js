@@ -3300,6 +3300,40 @@ window.ImageData.prototype.setPixel = function(a, b, c, d, e, f) {
   this.data[a + 3] = f;
 };
 HTMLImageElement.prototype.ImageData = "undefined";
+
+HTMLImageElement.prototype.getVerticallyFlippedImage = function(){
+    var can = document.createElement("canvas");
+    can.width = this.width;
+    can.height = this.height;
+    var con = can.getContext("2d");
+    
+    con.translate(0, this.height);
+    con.scale(1,-1);
+    con.drawImage(this,0,0);
+    
+    var url = can.toDataURL();
+    var img = document.createElement("IMG");
+    img.src = url;
+    
+    return img;
+};
+
+HTMLImageElement.prototype.getHorizontallyFlippedImage = function(){
+    var can = document.createElement("canvas");
+    can.width = this.width;
+    can.height = this.height;
+    var con = can.getContext("2d");
+    
+    con.translate(can.width, 0);
+    con.scale(-1,1);
+    con.drawImage(this,0,0);
+    
+    var url = can.toDataURL();
+    var img = document.createElement("IMG");
+    img.src = url;
+    
+    return img;
+};
 HTMLImageElement.prototype.getImageData = function() {
   var a = document.createElement("canvas");
   a.width = this.width;
