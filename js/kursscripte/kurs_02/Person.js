@@ -149,8 +149,17 @@ Person.prototype.Draw = function (c) {
     if(this.Position === 3)
         this.X = this.GUI.Width - (this.Width + 75);
     
-    if(this.Pic && this.Pic.complete)
-        c.drawImage(this.Pic, this.X, this.Y, this.Width, this.Height);
+    if(this.Pic && this.Pic.complete){
+        if(this.IsComming())
+            c.drawImage(this.Pic, this.X, this.Y, this.Width, this.Height);
+        else{
+            c.save();
+            c.translate(this.X, this.Y);
+            c.scale(-1,1);
+            c.drawImage(this.Pic, this.Width*(-1), 0, this.Width, this.Height);
+            c.restore();
+        }
+    }
     else{
         c.fillRect(this.X, this.Y, this.Width, this.Height);
         c.fillStyle = "white";

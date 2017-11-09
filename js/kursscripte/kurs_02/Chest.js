@@ -51,9 +51,6 @@ Chest.prototype.Draw = function (c) {
     c.save();
     if(this.ChestPic.complete){
         c.drawImage(this.ChestPic, this.X, this.Y, this.Width, this.Height);
-        c.fillStyle = "white";
-        c.setFontHeight(16);
-        c.fillSpinnedText(this.X + this.Width/2, this.Y + this.Height/2, this._gold, 0);
     }
     c.restore();
 

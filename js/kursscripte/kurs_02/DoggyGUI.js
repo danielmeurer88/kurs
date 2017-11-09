@@ -339,7 +339,6 @@ DoggyGUI.prototype._log = function (txt, header) {
  * @returns {undefined}
  */
 DoggyGUI.prototype._stateStatus = function(){
-    
     var d = this.Dog;
     var txt = "STATUS - Energy: {0}, Hunger: {1}, Thirst: {2}, Gold: {3}".format(d.GetEnergy(), d.GetHunger(), d.GetThirst(), this.Chest.GetGold());
     this._log(txt, 2);

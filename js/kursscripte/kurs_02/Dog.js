@@ -69,6 +69,34 @@ Dog.prototype.Draw = function (c) {
             c.drawImage(this.DogPic, 140, 280,this.DogPic.width*0.8, this.DogPic.height*0.8);
         }
         
+        if(this._currentActivity === "resting"){
+            var m = {x:140 + this.DogPic.width*0.8, y:280};
+            
+            c.fillStyle = "white";
+            c.fillVariousRoundedRect(m.x-14, m.y-14,28,28,5);
+            c.font='900 28px Arial';
+            c.fillStyle = "black";
+            c.fillSpinnedText(m.x, m.y, "Z");
+            
+            m.x += 20;
+            m.y -= 34;
+            
+            c.fillStyle = "white";
+            c.fillVariousRoundedRect(m.x-18, m.y-18,36,36,6);
+            c.font='900 36px Arial';
+            c.fillStyle = "black";
+            c.fillSpinnedText(m.x, m.y, "Z");
+            
+            m.x += 24;
+            m.y -= 40;
+            
+            c.fillStyle = "white";
+            c.fillVariousRoundedRect(m.x-22, m.y-22,44,44,7);
+            c.font='900 44px Arial';
+            c.fillStyle = "black";
+            c.fillSpinnedText(m.x, m.y, "Z");
+        }
+        
     }else{
         
         var dx,dy = 300;
