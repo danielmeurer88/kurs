@@ -5,7 +5,7 @@
 
 console.log("___ ANFANG des Scripts: kurs_01_script_03.js _____");
 
-// 6. Wichtige JavaScript Funktionen
+// 6. Wichtige JavaScript-Funktionen
 // JavaScript besitzt einige Funktionen, die das Programmieren erleichtern
 
 // 6.1 - Die Ausgabe eines Textes/Werts
@@ -19,7 +19,7 @@ console.log( "Dieser Text erscheint nur in der Konsole :: " + PolizeiHund.Bellen
 var verstanden = confirm("Bewerte folgende Aussage: Du hast Alles verstanden.");
 console.log("Benutzer bewertet die Aussage, ob er oder sie Alles verstanden habe, mit " + verstanden);
 
-// 6.3 - Eingabe des Benutzers abfangen mit prompt();
+// 6.3 - Eingabe des Benutzers abfragen mit prompt();
 var frage = "12 + 6";
 var ergebnis = prompt(frage + " = ");
 alert(frage + " = " + ergebnis);
