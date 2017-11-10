@@ -121,14 +121,15 @@ Ron.Farbe = "schwarz";
 var Mandy = new Hund("Mandy", 3, false);
 // und fragen nun ihre Farbe ab;
 console.log(Mandy.Name + "s Fellfarbe ist " + Mandy.Farbe);
+// Ausgabe in der Konsole: Mandys Fellfarbe ist undefined
 
-// Ausgabe: Mandys Fellfarbe ist undefined
 // dies ist keine schöne Ausgabe
 // was wir wollen ist, wenn die Farbe eines Hundes nicht extra angegeben wurde, soll
 // diese als "unbekannt" angegeben werden
 
-// In JavaScript wird zuerst im Objekt geschaut ob es dort das gewünschte Attribut gibt
-// (hier Farbe), wenn dies nicht existiert, dann schaut JS auf die "Ur"-Bauanleitung
+// Info:
+// In JavaScript wird zuerst im Objekt selbst geschaut ob es dort das gewünschte Attribut gibt
+// (hier Farbe). Wenn dies nicht existiert, dann schaut JS in der "Ur"-Bauanleitung nach
 // Alle Instanzen teilen diese Ur-Bauanleitung. Sie heißt "prototype"
 
 Hund.prototype.Farbe = "unbekannt";
