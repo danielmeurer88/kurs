@@ -5,6 +5,7 @@
 
 console.log("___ ANFANG des Scripts: kurs_01_script_02.js _____");
 
+//#################################################################################
 // 5. FUNKTIONEN (Part 2)
 
 // 5.1 Parameter
@@ -73,7 +74,8 @@ var Schnuckel = new Hund("Schnuckel", 2, false);
 // Der Sch‰ferhund Ron
 var Ron = new Hund("Ron", 5, true);
 
-// Professionelle Anmerkung: diese "Bauanleitung" wird auch Klasse genannt
+// Professionelle Anmerkung: diese "Bauanleitung" wird allgemein Klasse genannt
+// (In JavaScript auch Konstruktorfunktionen)
 // Objekte, die mit Hilfe einer Klasse entstehen, heiﬂen Instanzen
 
 console.log("___ ENDE des Scripts: kurs_01_script_02.js _____");

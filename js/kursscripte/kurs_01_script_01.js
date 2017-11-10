@@ -1,17 +1,17 @@
 
 console.log("___ ANFANG des Scripts: kurs_01_script_01.js _____");
 
+//#################################################################################
 // 1. Kommentare und Anweisungen
 
 // Kommentare im Programmcode werden von der Ausführung ignoriert
-// es gibt zwei Arten wie Kommentare gekennzeichnet werden:
+// es gibt (in JavaScript) zwei Arten wie Kommentare gekennzeichnet werden:
 
-// 1. die doppelten Schrägstrichen (en. "slash") kommentiert eine Zeile aus – und zwar genau die, die dahintersteht
+// 1. die doppelten Schrägstrichen (en. "slash") kommentiert eine Zeile aus 
+// ...und zwar die Zeichen, die rechts dahintersteht
 /* 2. Schrägstrich + Sternchen zum Beginn des Kommentars und Sternchen + Schrägstrich zum Ende */
 
-// Programmcode wird von oben nach unten zeilenweise abgearbeitet
-// Alle Anweisungen in JavaScript enden mit einem Semicolon ;
-
+//#################################################################################
 // 2. VARIABLEN
 
 // Um Werte zu speichern werden Variablen verwendet.
@@ -25,6 +25,7 @@ abc = 1;
 // links vom Gleichheitszeichen: die variable, der zugewiesen wird
 // rechts: der Wert, der zugewiesen wird
 
+//#################################################################################
 // 3. DATENTYPEN
 
 // JavaScript kennt 2 Arten von Datentypen. - Primitive Datentypen und Objekte
@@ -42,10 +43,10 @@ var falsch = false;
 
 // 3.2 Alles andere was kein Primitiver Datentyp ist, sind Objekte
 
-// Objekt 1:
+// Wert eines Objekts:
 { zufaelligerText : "Das ist ein Objektwert - man achte auf die geschweifte Klammern und der Doppelpunkt"};
 
-// Objekt 2:
+// auch Wert eines Objekts:
 { 
 	objektText : "nur dumm, dass der Objektwert nicht in einer Variable gespeichert wird..."
 };
@@ -56,10 +57,13 @@ var object = {
 	text2 : "Attribute bestehen aus einen Namen und einer direkten Wertzuweisung mit einem Doppelpunkt",
 	text3 : "mehrere Attribute werden mit einem Komma getrennt",
 	zahl1 : 12.34,
-	bool : true
+	bool : true,
+        object1 : {
+            text4 : "Objekte koennen auch Objekte enthalten"
+        }
 };
 
-object.text4 = "In Javascript koennen Objekte ganz einfach erweitert werden";
+object.text5 = "In Javascript koennen Objekte ganz einfach erweitert werden";
 
 // ARRAYS (dt. Felder) sind spezielle Objekte
 
@@ -77,10 +81,14 @@ array[2]; // ist der Boolische Wert true
 
 array[3] = "Arrays koennen wie Objekte ganz einfach erweitert werden";
 
-// 4. FUNKTIONEN (Part 1)
-// jede Programmiersprache besitzt Funktionen. In Javascript werden sie so definiert:
+// Besonderer Zugriff auf die Attribute durch []
+// Funktioniert auch mit normalen Objekten
 
-//Signalwort 'function' + name + () + {}
+object["zahl1"] = array[0] * 4 + abc / 3;
+
+// 4. FUNKTIONEN (Part 1)
+// jede Programmiersprache besitzt Funktionen, um eine definierte Aufgabe zu erledigen.
+//In JavaScript Signalwort 'function ' + name + () + {}
 
 function funktion(){
 	// geschweifte Klammern umranden den Funktionskörper
@@ -95,15 +103,16 @@ function funktion(){
 funktion(); // das Array 'array' wird jetzt erweitert;
 
 // zweiter Funktionsaufruf
-funktion(); //das 5. Element des Arrays 'array' wird mit dem Wert, der im Attribut 'zahl1' des Objekts 'object' gespeichert ist, überschrieben
+funktion(); //das 5. Element des Arrays 'array' wird mit dem Wert, der 
+//im Attribut 'zahl1' des Objekts 'object' gespeichert ist, überschrieben.
 
 // INFO: Auch Funktionen sind nichts anderes als spezielle Objekte
 
 var variable = function(){
 	//Anweisung 1 - Erweiterung von 'object'
 	object.bool2 = false;
-	//Anweisung 2 - Erweiterung von 'array' - 101. Element erhält den Wert "crazy"
-	array[8] = "crazy";
+	//Anweisung 2 - Erweiterung von 'array' - 11. Element erhält den Wert "crazy"
+	array[10] = "crazy";
 };
 
 variable();

@@ -5,8 +5,9 @@
 
 console.log("___ ANFANG des Scripts: kurs_01_script_03.js _____");
 
+//#################################################################################
 // 6. Wichtige JavaScript-Funktionen
-// JavaScript besitzt einige Funktionen, die das Programmieren erleichtern
+// JavaScript besitzt bereits einige Funktionen, die das Programmieren erleichtern
 
 // 6.1 - Die Ausgabe eines Textes/Werts
 // Die Funktion alert() lässt ein Popup im Browser erscheinen, die einen Text ausgibt
@@ -27,8 +28,11 @@ alert(frage + " = " + ergebnis);
 // "Ausrechnen" eines Textes mit eval();
 alert("eval(" + frage + ")" + " = " + eval(frage));
 
-//Professioneller Tipp: eval() ist für öffentliche Seiten nicht mehr verwendet: Zu gefährlich
+//Professioneller Tipp: eval() sollte für öffentliche Seiten nicht mehr
+// verwendet werden: Zu gefährlich
 
+
+//#################################################################################
 // 7. Kontrollstrukturen
 // jede Programmiersprache besitzt Möglichkeiten, ein Script oder Programm zu lenken
 
@@ -94,60 +98,7 @@ while(continueAsking){
     if(continueAsking){
         continueAsking = confirm("Soll noch einmal diese Frage gefragt werden?");
     }
-}
-    
+}    
 console.log("### END do-while-Schleife");
-
-
-// ENDE Anfängerteil:
-
-
-// 8. Funktionen (Part 3)
-
-// Jedes Objekt, das mittels "Bauanleitung" erzeugt wurde, trägt eine Kopie der Anleitung
-// mit sich
-
-// Wir schreiben folgende Anweisung
-Schnuckel.Rasse = "Chiwawa";
-
-// Dies ändert nur das Attribut 'Rasse' dieses einen Objektes (die von Schnuckel)
-
-// Wir möchten jetzt die Farbe unserer Hunden speichern und das geht folgendermaßen
-Rex.Farbe = "braun/schwarz";
-Schnuckel.Farbe = "beige";
-Ron.Farbe = "schwarz";
-
-// Wir erhalten nun einen weiteren Hund, Die Schäferhündin Mandy
-var Mandy = new Hund("Mandy", 3, false);
-// und fragen nun ihre Farbe ab;
-console.log(Mandy.Name + "s Fellfarbe ist " + Mandy.Farbe);
-// Ausgabe in der Konsole: Mandys Fellfarbe ist undefined
-
-// dies ist keine schöne Ausgabe
-// was wir wollen ist, wenn die Farbe eines Hundes nicht extra angegeben wurde, soll
-// diese als "unbekannt" angegeben werden
-
-// Info:
-// In JavaScript wird zuerst im Objekt selbst geschaut ob es dort das gewünschte Attribut gibt
-// (hier Farbe). Wenn dies nicht existiert, dann schaut JS in der "Ur"-Bauanleitung nach
-// Alle Instanzen teilen diese Ur-Bauanleitung. Sie heißt "prototype"
-
-Hund.prototype.Farbe = "unbekannt";
-
-console.log("Nochmal: " + Mandy.Name + "s Fellfarbe ist " + Mandy.Farbe);
-
-// Bonus: Wir schreiben Bellen-Funktion der Klasse Hund
-
-Hund.prototype.Bellen = function(){
-    if(this.Rasse === "Schaeferhund"){
-        console.log(this.Name + " bellt: Wuff Wuff");
-    }else{
-        console.log(this.Name + " bellt: Klaeff Klaeff");
-    }
-};
-
-Rex.Bellen();
-Mandy.Bellen();
-Schnuckel.Bellen();
 
 console.log("___ ENDE des Scripts: kurs_01_script_03.js _____");
