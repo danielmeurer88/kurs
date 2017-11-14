@@ -22,7 +22,7 @@ Teenager.prototype.Initialize = function () {
 Teenager.prototype.DoAction = function () {
 
     if(this._scared){
-        this._log(this.Name + " is scared.", 2);
+        //this._log(this.Name + " is scared.", 2);
         return;
     }
     

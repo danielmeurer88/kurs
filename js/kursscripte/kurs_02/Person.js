@@ -115,6 +115,16 @@ Person.prototype.DoSingleRound = function () {
     
     if(this.Position === 4){
         this._comming = false;
+    }
+};
+
+/**
+ * will be overwritten by children
+ * @returns {undefined}
+ */
+Person.prototype.ResolveRound = function () {
+    
+    if(this.Position === 4){
         this.DoAction();
     }
 };
@@ -123,7 +133,8 @@ Person.prototype.DoSingleRound = function () {
  * will be overwritten by children
  * @returns {undefined}
  */
-Person.prototype.DoAction = function () {};
+Person.prototype.DoAction = function () {
+};
 
 /**
  * can be overwritten by children

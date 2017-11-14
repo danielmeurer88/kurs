@@ -19,23 +19,28 @@
                             background-color: #aaffaa;
 			}
                         
-                        #Console {
+                        #Console_Container {
                             width:720px;
+                            height: 220px;
+                            position:relative;
+                        }
+                        
+                        #Console {
+                            width:680px;
                             height: 220px;
                             overflow-y: scroll;
                             background-color: black;
-							position:relative;
                         }
 						
-						#ChangeButton { 
+                        #ChangeButton { 
                             position:absolute;
-							top:0px;
-							right:0px;
-							width:20px;
-							height:20px;
-							background-color:grey;
-							cursor:pointer;
-						}
+                            top:0px;
+                            right:0px;
+                            width:40px;
+                            height:220px;
+                            background-color:grey;
+                            cursor:pointer;
+                        }
                         
                         .line {color:white;}
                         
@@ -70,6 +75,10 @@
     </head>
     <body>
 		<canvas width="720" height="620" id="PlayField"></canvas>
-		<div id="Console"><div id="ChangeButton"></div></div>
+                <div id="Console_Container">
+                    <div id="Console"></div>
+                    <div id="ChangeButton"></div>
+                </div>
+                
     </body>
 </html>
