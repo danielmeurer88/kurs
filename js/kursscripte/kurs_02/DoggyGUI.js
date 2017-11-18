@@ -351,7 +351,7 @@ DoggyGUI.prototype._doSingleRound = function () {
     
     if(this._gameOver) return;
     
-    this._log("+++ Runde: " + (this.Round+1), 1);    
+    this._log("+++ Round: " + (this.Round+1), 1);    
     this._ts_lastround = Date.now();
     this.Round++;
     
@@ -359,8 +359,11 @@ DoggyGUI.prototype._doSingleRound = function () {
     
     this.Dog.DetermineActivity();
     this.Person.DoSingleRound();
+    
+    
     this.Dog.ResolveRound();
-     
+    this.Person.ResolveRound();
+    
     // if the person stole all the money
     if(this.Chest._gold <= 0){
         this.Lose();
