@@ -1,7 +1,7 @@
 
 function DoggyGUI() {
 
-    ABO.call(this);
+    Anibody.classes.ABO.call(this);
     
     this.Width = this.Engine.Canvas.width;
     this.Height = this.Engine.Canvas.height;
@@ -37,7 +37,7 @@ function DoggyGUI() {
 this.Initialize();
 }
 
-DoggyGUI.prototype = Object.create(ABO.prototype);
+DoggyGUI.prototype = Object.create(Anibody.classes.ABO.prototype);
 DoggyGUI.prototype.constructor = DoggyGUI;
 
 /**
@@ -50,7 +50,7 @@ DoggyGUI.prototype.Initialize = function () {
     now = now.toLocaleDateString() + " - " + now.toLocaleTimeString();
     this._log("---- Starting the Game at " + now, 0); 
 
-    this.Pics.Background = this.Engine.MediaManager.GetImage("background");
+    this.Pics.Background = this.Engine.MediaManager.GetPicture("background");
     
     this.Engine.SetSelectedObject(this);
     this.Dog = new Dog();
@@ -59,7 +59,7 @@ DoggyGUI.prototype.Initialize = function () {
     
     this._nextCreation = Random.GetNumber(Rules.StartCreation[0], Rules.StartCreation[1]);
     
-    this.Button.Start = new Button({
+    this.Button.Start = new Anibody.ui.Button({
         X:10, Y: this.Height - 50, Width:80, Height:40,
         Label : "Start",
         TextColor: "white", FontHeight: 18,
@@ -74,7 +74,7 @@ DoggyGUI.prototype.Initialize = function () {
             function(){return !this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
-    this.Button.Pause = new Button({
+    this.Button.Pause = new Anibody.ui.Button({
         X:this.Button.Start.X + this.Button.Start.Width + 10, Y: this.Height - 50, Width:60, Height:40,
         Label : "Pause",
         TextColor: "white", FontHeight: 18,
@@ -89,7 +89,7 @@ DoggyGUI.prototype.Initialize = function () {
             function(){return this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
-    this.Button.Step = new Button({
+    this.Button.Step = new Anibody.ui.Button({
         X:this.Button.Pause.X + this.Button.Pause.Width + 10, Y: this.Height - 50, Width:80, Height:40,
         Label : "Step",
         TextColor: "white", FontHeight: 18,
@@ -104,7 +104,7 @@ DoggyGUI.prototype.Initialize = function () {
             function(){return !this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
-    this.Button.FastForward = new Button({
+    this.Button.FastForward = new Anibody.ui.Button({
         X:this.Button.Step.X + this.Button.Step.Width + 10, Y: this.Height - 50, Width:80, Height:40,
         Label : "FF",
         TextColor: "white", FontHeight: 18,
@@ -119,7 +119,7 @@ DoggyGUI.prototype.Initialize = function () {
             function(){return !this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
-    this.Button.ForwardEnd = new Button({
+    this.Button.ForwardEnd = new Anibody.ui.Button({
         X:this.Button.FastForward.X + this.Button.FastForward.Width + 10, Y: this.Height - 50, Width:80, Height:40,
         Label : "FEnd",
         TextColor: "white", FontHeight: 18,
@@ -134,7 +134,7 @@ DoggyGUI.prototype.Initialize = function () {
             function(){return !this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
-    this.Button.Download = new Button(
+    this.Button.Download = new Anibody.ui.Button(
             this.X + this.Width - 60, this.Y + this.Height - 60, 50, 50,
             {DisplayType: "both", Codename: "disk", TextColor: "black", FontHeight: 18,
                 TriggerCallbackObject: {that: this,

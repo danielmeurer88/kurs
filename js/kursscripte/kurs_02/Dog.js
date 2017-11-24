@@ -1,7 +1,7 @@
 
 function Dog() {
 
-    ABO.call(this);
+    Anibody.classes.ABO.call(this);
     
     this.GUI = this.Engine.GetSelectedObject();
     
@@ -29,7 +29,7 @@ function Dog() {
 this.Initialize();
 }
 
-Dog.prototype = Object.create(ABO.prototype);
+Dog.prototype = Object.create(Anibody.classes.ABO.prototype);
 Dog.prototype.constructor = Dog;
 
 /**
