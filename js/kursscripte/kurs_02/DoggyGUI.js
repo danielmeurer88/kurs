@@ -513,7 +513,7 @@ DoggyGUI.prototype.DownloadPDF = function (cbo) {
         this._createPDF(name);
     }.getCallbackObject(this);
     
-    new Prompt("Name of the file (without the extension)", cbo).Start(cbo);
+    new Anibody.ui.Prompt("Name of the file (without the extension)", cbo).Start(cbo);
 };
 
 DoggyGUI.prototype._createPDF = function (name) {
