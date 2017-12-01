@@ -59,25 +59,25 @@ DoggyGUI.prototype.Initialize = function () {
     
     this._nextCreation = Random.GetNumber(Rules.StartCreation[0], Rules.StartCreation[1]);
     
-    this.Button.Start = new Anibody.ui.Button({
-        X:10, Y: this.Height - 50, Width:80, Height:40,
-        Label : "Start",
-        TextColor: "white", FontHeight: 18,
+    Anibody.ui.Button.SetTemplateByObject({
+        Height : 40, TextColor : "white", FontHeight: 18
+    });
+    
+    this.Button.Start = new Anibody.ui.Button(10,this.Height - 50, 
+        {Width:80, Label : "Start",
         TriggerCallbackObject : function (engine) {
                 this._running = true;
             }.getCallbackObject(this, this.Engine),
         HoverText : "Starts automatic rounds"
-    });
+        });
     this.Button.Start.AddButtonEffect();
     this.Button.Start.SetActiveFunctionObject(
             //Start-Button will be active when game is stopped
             function(){return !this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
-    this.Button.Pause = new Anibody.ui.Button({
-        X:this.Button.Start.X + this.Button.Start.Width + 10, Y: this.Height - 50, Width:60, Height:40,
-        Label : "Pause",
-        TextColor: "white", FontHeight: 18,
+    this.Button.Pause = new Anibody.ui.Button(this.Button.Start.X + this.Button.Start.Width + 10, this.Height - 50, 
+    {Width:60, Label : "Pause",
         TriggerCallbackObject : function (engine) {
                 this._running = false;
             }.getCallbackObject(this, this.Engine),
@@ -89,10 +89,8 @@ DoggyGUI.prototype.Initialize = function () {
             function(){return this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
-    this.Button.Step = new Anibody.ui.Button({
-        X:this.Button.Pause.X + this.Button.Pause.Width + 10, Y: this.Height - 50, Width:80, Height:40,
-        Label : "Step",
-        TextColor: "white", FontHeight: 18,
+    this.Button.Step = new Anibody.ui.Button(this.Button.Pause.X + this.Button.Pause.Width + 10, this.Height - 50,
+    {Width:80, Label : "Step",
         TriggerCallbackObject : function () {
                 this._doSingleRound();
             }.getCallbackObject(this),
@@ -104,10 +102,8 @@ DoggyGUI.prototype.Initialize = function () {
             function(){return !this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
-    this.Button.FastForward = new Anibody.ui.Button({
-        X:this.Button.Step.X + this.Button.Step.Width + 10, Y: this.Height - 50, Width:80, Height:40,
-        Label : "FF",
-        TextColor: "white", FontHeight: 18,
+    this.Button.FastForward = new Anibody.ui.Button(this.Button.Step.X + this.Button.Step.Width + 10,this.Height - 50,
+    {Width:80, Label : "FF",
         TriggerCallbackObject : function () {
                 this.FastForward(10);
             }.getCallbackObject(this),
@@ -119,10 +115,8 @@ DoggyGUI.prototype.Initialize = function () {
             function(){return !this._running && !this._gameOver;}.getCallbackObject(this)
     );
     
-    this.Button.ForwardEnd = new Anibody.ui.Button({
-        X:this.Button.FastForward.X + this.Button.FastForward.Width + 10, Y: this.Height - 50, Width:80, Height:40,
-        Label : "FEnd",
-        TextColor: "white", FontHeight: 18,
+    this.Button.ForwardEnd = new Anibody.ui.Button(this.Button.FastForward.X + this.Button.FastForward.Width + 10, this.Height - 50,
+    {Width:80, Label : "FEnd",
         TriggerCallbackObject : function () {
                 this.FastForward();
             }.getCallbackObject(this),
@@ -135,8 +129,8 @@ DoggyGUI.prototype.Initialize = function () {
     );
     
     this.Button.Download = new Anibody.ui.Button(
-            this.X + this.Width - 60, this.Y + this.Height - 60, 50, 50,
-            {DisplayType: "both", Codename: "disk", TextColor: "black", FontHeight: 18,
+            this.X + this.Width - 60, this.Y + this.Height - 60,
+            {Width: 50, DisplayType: "both", Codename: "disk",
                 TriggerCallbackObject: {that: this,
                     function: function () {
                          this.DownloadPDF();
