@@ -1,3 +1,4 @@
+Anibody.SetPackage("Anibody", "visual");
 
 /**
  * Represents a Cartesian coordinate system
@@ -9,7 +10,7 @@
  * @returns {CoordinateSystem}
  */
 Anibody.visual.CoordinateSystem = function CoordinateSystem(x, y, w, h, opt) {
-    Anibody.classes.ABO.call(this);
+    Anibody.ABO.call(this);
 
     /* Standard Attributes */
     this.X = x;
@@ -66,7 +67,7 @@ Anibody.visual.CoordinateSystem = function CoordinateSystem(x, y, w, h, opt) {
 
     this.Initialize();
 }
-Anibody.visual.CoordinateSystem.prototype = Object.create(Anibody.classes.ABO.prototype);
+Anibody.visual.CoordinateSystem.prototype = Object.create(Anibody.ABO.prototype);
 Anibody.visual.CoordinateSystem.prototype.constructor = Anibody.visual.CoordinateSystem;
 /**
  * @see README_DOKU.txt

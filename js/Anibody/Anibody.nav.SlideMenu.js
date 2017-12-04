@@ -1,3 +1,4 @@
+Anibody.SetPackage("Anibody", "nav");
 
 /**
  * A SlideMenu arrays an amount of Tabs, attached on a certain side of the canvas
@@ -7,7 +8,7 @@
  * @returns {SlideMenu}
  */
 Anibody.nav.SlideMenu = function SlideMenu(attto, dist) {
-    Anibody.classes.ABO.call(this);
+    Anibody.ABO.call(this);
     
     this.Tabs = [];
     this.OpenTab = null;
@@ -19,7 +20,7 @@ Anibody.nav.SlideMenu = function SlideMenu(attto, dist) {
     // overall needed depth, which will be regarded by all tabs
     this.NeededDepth = 0;
 };
-Anibody.nav.SlideMenu.prototype = Object.create(Anibody.classes.ABO.prototype);
+Anibody.nav.SlideMenu.prototype = Object.create(Anibody.ABO.prototype);
 Anibody.nav.SlideMenu.prototype.constructor = Anibody.nav.SlideMenu;
 
 /**

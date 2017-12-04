@@ -1,7 +1,7 @@
 
 function Chest() {
 
-    Anibody.classes.ABO.call(this);
+    Anibody.ABO.call(this);
     
     this.GUI = this.Engine.GetSelectedObject();
     
@@ -18,7 +18,7 @@ function Chest() {
 this.Initialize();
 }
 
-Chest.prototype = Object.create(Anibody.classes.ABO.prototype);
+Chest.prototype = Object.create(Anibody.ABO.prototype);
 Chest.prototype.constructor = Chest;
 
 /**

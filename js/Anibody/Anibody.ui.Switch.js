@@ -1,3 +1,5 @@
+Anibody.SetPackage("Anibody", "ui");
+
 /**
  * represents a switch which state can be changed to off and on - by changing states it will trigger a function (callback-object)
  * @param {number} x
@@ -9,7 +11,7 @@
  * @returns {Switch}
  */
 Anibody.ui.Switch = function Switch(x, y, width, height, cbo, on){
-    Anibody.classes.ABO.call(this);
+    Anibody.ABO.call(this);
     
     this.X = x;
     this.Y = y;
@@ -60,7 +62,7 @@ Anibody.ui.Switch = function Switch(x, y, width, height, cbo, on){
     
 this.Initialize();
 };
-Anibody.ui.Switch.prototype = Object.create(Anibody.classes.ABO.prototype);
+Anibody.ui.Switch.prototype = Object.create(Anibody.ABO.prototype);
 Anibody.ui.Switch.prototype.constructor = Anibody.ui.Switch;
 
 Anibody.ui.Switch.prototype.DefaultBackgroundColor = "grey";

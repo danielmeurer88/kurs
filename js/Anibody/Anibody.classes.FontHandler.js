@@ -1,4 +1,7 @@
 
+// NOT USED AT THE MOMENT - IDEA WILL BE IMPLEMENTED IN ABOText
+
+Anibody.SetPackage("Anibody", "classes");
 /**
  * Is going to be attached to the context
  * @param {Canvas2DContext} context

@@ -7,7 +7,7 @@ Anibody.SetPackage("Anibody", "util"); // checks if the object Anibody.util exis
  * @returns {MediaManager}
  */
 Anibody.util.MediaManager = function MediaManager() {
-    Anibody.classes.ABO.call(this);
+    Anibody.ABO.call(this);
 
     this.Pictures = new Map();
     this.Sounds = new Map();
@@ -23,7 +23,7 @@ Anibody.util.MediaManager = function MediaManager() {
     this.Loading = false;
 
 }
-Anibody.util.MediaManager.prototype = Object.create(Anibody.classes.ABO.prototype);
+Anibody.util.MediaManager.prototype = Object.create(Anibody.ABO.prototype);
 Anibody.util.MediaManager.prototype.constructor = Anibody.util.MediaManager;
 
 Anibody.util.MediaManager.prototype.DefaultBarColor = "green";
@@ -148,7 +148,7 @@ Anibody.util.MediaManager.prototype.LoadMedia = function (pack, co) {
         var curpct = pack.pop(); // curpct = current element of the processed mediapack
         mm.Progress += mm.ProgressStep; // progress progresses one step further - needed for the animation
 
-        if (curpct instanceof Picture) {
+        if (curpct instanceof Anibody.util.Picture) {
             mm.Pictures.set(curpct.Codename,curpct);
             curpct.Load(of, {
                 co: co,
@@ -158,7 +158,7 @@ Anibody.util.MediaManager.prototype.LoadMedia = function (pack, co) {
             return;
         }
 
-        if (curpct instanceof Sound) {
+        if (curpct instanceof Anibody.util.Sound) {
             mm.Sounds.set(curpct.Codename,curpct);
             curpct.Load(of, {
                 co: co,

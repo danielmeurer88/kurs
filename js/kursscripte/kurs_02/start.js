@@ -5,6 +5,7 @@ $(document).ready(function () {
 
     Anibody.import(Anibody.util.Picture);
     Anibody.importAll(Anibody.static);
+    Anibody.importAll(Anibody.ui);
 
     var mediapack = [
         new Picture({path: "./pics/background.jpg", codename: "background"}),

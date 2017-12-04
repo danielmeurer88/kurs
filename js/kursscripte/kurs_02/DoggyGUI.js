@@ -1,7 +1,7 @@
 
 function DoggyGUI() {
 
-    Anibody.classes.ABO.call(this);
+    Anibody.ABO.call(this);
     
     this.Width = this.Engine.Canvas.width;
     this.Height = this.Engine.Canvas.height;
@@ -37,7 +37,7 @@ function DoggyGUI() {
 this.Initialize();
 }
 
-DoggyGUI.prototype = Object.create(Anibody.classes.ABO.prototype);
+DoggyGUI.prototype = Object.create(Anibody.ABO.prototype);
 DoggyGUI.prototype.constructor = DoggyGUI;
 
 /**

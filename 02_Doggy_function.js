@@ -25,16 +25,7 @@ function DoggyRound(round, dog,){
     
     // Start
     
-    if(type === "Thief" && comming){
-        if(round%2===0)
-            dog.Bark(target);
-        else
-            dog.Growl(target);
-    }
-    
-    if(type === "Teenager" && comming && (pos === 1 || pos === 2 || pos === 3) ){
-        dog.Bark(target);
-    }
+
     
     // End
     // to be sure that dog is not idling or doing the wrong activity

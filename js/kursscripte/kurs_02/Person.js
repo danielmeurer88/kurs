@@ -1,5 +1,5 @@
 function Person() {
-    Anibody.classes.ABO.call(this);
+    Anibody.ABO.call(this);
     this.GUI = this.Engine.GetSelectedObject();
     this._createdAtRound = this.GUI.Round;
     
@@ -33,7 +33,7 @@ function Person() {
     this._gone = false;
     
 }
-Person.prototype = Object.create(Anibody.classes.ABO.prototype);
+Person.prototype = Object.create(Anibody.ABO.prototype);
 Person.prototype.constructor = Person;
 
 Person.prototype._log = function (txt, header) {

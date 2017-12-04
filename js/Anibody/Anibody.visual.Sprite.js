@@ -1,3 +1,5 @@
+Anibody.SetPackage("Anibody", "visual");
+
 /**
  * Represents a sprite - a collection of clips in one single image.
  * A number of flags decide which clip the sprite will render
@@ -9,7 +11,7 @@
  * @returns {Anibody.visual.Sprite}
  */
 Anibody.visual.Sprite = function Sprite(codename, canvasX, canvasY,clipWidth, clipHeight) {
-    Anibody.classes.ABO.call(this);
+    Anibody.ABO.call(this);
     this.Codename = codename;
     this.SpriteImage = {complete : false}; // the whole image
     this.ClipCanvas = null;
@@ -39,7 +41,7 @@ Anibody.visual.Sprite = function Sprite(codename, canvasX, canvasY,clipWidth, cl
     this.Initialize();
 };
 
-Anibody.visual.Sprite.prototype = Object.create(Anibody.classes.ABO.prototype);
+Anibody.visual.Sprite.prototype = Object.create(Anibody.ABO.prototype);
 Anibody.visual.Sprite.prototype.constructor = Anibody.visual.Sprite;
 
 /**

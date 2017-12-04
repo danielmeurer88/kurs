@@ -1,3 +1,5 @@
+Anibody.SetPackage("Anibody", "ui");
+
 /**
  * Represents a Slider, which can be dragged within the
  * length (from x to x+width) by the user. 
@@ -8,7 +10,7 @@
  * @returns {Slider}
  */
 Anibody.ui.Slider = function Slider(x,y,width,height){
-    Anibody.classes.ABO.call(this);
+    Anibody.ABO.call(this);
     
     this.X = x;
     this.Y = y
@@ -47,7 +49,7 @@ Anibody.ui.Slider = function Slider(x,y,width,height){
 this.Initialize();
 };
 
-Anibody.ui.Slider.prototype = Object.create(Anibody.classes.ABO.prototype);
+Anibody.ui.Slider.prototype = Object.create(Anibody.ABO.prototype);
 Anibody.ui.Slider.prototype.constructor = Anibody.ui.Slider;
 
 Anibody.ui.Slider.prototype.DefaultColor = "rgba(100,100,120,1)";

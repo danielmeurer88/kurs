@@ -1,3 +1,5 @@
+Anibody.SetPackage("Anibody", "ui");
+
 /**
  * @description Displays a button
  * @param {Number} x
@@ -7,7 +9,7 @@
  * @returns {Button}
  */
 Anibody.ui.Button = function Button(x, y, options) {
-    Anibody.classes.ABO.call(this);
+    Anibody.ABO.call(this);
     
     this.Options = options;
     
@@ -125,7 +127,7 @@ Anibody.ui.Button = function Button(x, y, options) {
     this.Initialize();
 };
 
-Anibody.ui.Button.prototype = Object.create(Anibody.classes.ABO.prototype);
+Anibody.ui.Button.prototype = Object.create(Anibody.ABO.prototype);
 Anibody.ui.Button.prototype.constructor = Anibody.ui.Button;
 
 /**

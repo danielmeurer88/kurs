@@ -1,3 +1,5 @@
+Anibody.SetPackage("Anibody", "ui");
+
 /**
  * Presents a dialog box to the user, in which the user can confirms their decision of a given text
  * @param {string/string array} text
@@ -5,7 +7,7 @@
  * @returns {Confirm}
  */
 Anibody.ui.Confirm = function Confirm(text, cbo) {
-    Anibody.classes.ABO.call(this);
+    Anibody.ABO.call(this);
 
     // the quotient, which will be multiplied with the canvas width to calculate the width of the alert box
     this.ContentWidthQuotient = 0.6;
@@ -54,7 +56,7 @@ Anibody.ui.Confirm = function Confirm(text, cbo) {
 
     this.Initialize();
 }
-Anibody.ui.Confirm.prototype = Object.create(Anibody.classes.ABO.prototype);
+Anibody.ui.Confirm.prototype = Object.create(Anibody.ABO.prototype);
 Anibody.ui.Confirm.prototype.constructor = Anibody.ui.Confirm;
 
 Anibody.ui.Confirm.prototype.ContentBoxColor = "#999";

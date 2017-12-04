@@ -1,3 +1,5 @@
+Anibody.SetPackage("Anibody", "ui");
+
 /**
  * Represents a dialog box, in which the user can choose from different options
  * @param {string|string-array} text
@@ -6,7 +8,7 @@
  * @returns {MultipleChoice}
  */
 Anibody.ui.MultipleChoice = function MultipleChoice(text,labels, cbos){
-    Anibody.classes.Widget.call(this);
+    Anibody.Widget.call(this);
     
     this.X=0;
     this.Y=0;
@@ -61,7 +63,7 @@ Anibody.ui.MultipleChoice = function MultipleChoice(text,labels, cbos){
 this.Initialize();
 };
 
-Anibody.ui.MultipleChoice.prototype = Object.create(Anibody.classes.Widget.prototype);
+Anibody.ui.MultipleChoice.prototype = Object.create(Anibody.Widget.prototype);
 Anibody.ui.MultipleChoice.prototype.constructor = Anibody.ui.MultipleChoice;
 
 Anibody.ui.MultipleChoice.prototype.ContentBoxColor = "#999";
@@ -230,12 +232,12 @@ Anibody.ui.MultipleChoice.prototype._initSizes = function () {
     for(var i=0; i<this.Labels.length; i++){
         txtw = c.measureText(this.Labels[i]).width;
         bpad = (this.ContentBox.width - txtw)/2;
-        this.Buttons[i] = new Button(
+        this.Buttons[i] = new Anibody.ui.Button(
                 margin, //x
                 margin + this.ImageText.height + (i*boxh) + (i*this.RowSpace), //y
-                this.ContentBox.width - 2*margin, // width
-                boxh, // height
                 {
+                    Width: this.ContentBox.width - 2*margin, // width
+                    Height : boxh, // height
                     DisplayType: "color", TextColor: "white", FontHeight: fh,
                     Label : this.Labels[i], Padding:bpad,
                     TriggerCallbackObject: this.CallbackObjects[i],
