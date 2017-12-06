@@ -29,7 +29,7 @@ setzeZahl();
 
 // 4. Aufruf
 setzeZahl("muss nicht eine Zahl sein");
-// Sollte also in der Funktion behandelt werden 
+// Validierungen sollten also in der Funktion behandelt werden 
 
 // 5.2 Rückgabewerte
 // Mit dem Signalwort 'return' kann ein Wert zurückgegeben werden, der dann an
@@ -48,11 +48,16 @@ PolizeiHund.Name = "Rex";
 PolizeiHund.Alter = 7;
 PolizeiHund.Bellen = function(){ return PolizeiHund.Name + " bellt: Wuff Wuff"; };
 
+// So könnte zum Beispiel der PolizeiHund Rex in einem Javascript-Programm
+// dargestellt werden.
 
-// 5.3 Funktionen können als "Bauanleitung" für neue Objekte dienen
+// Aber was ist, wenn wir mehrere Hunde darstellen und verarbeiten wollen
 
-// Da wir eine Funktion nur als "Bauanleitung" verwenden, haben wir keinen
-// Funktionsnamen, mit Hilfe dessen wir das Objekt erweitern könnten.
+// 5.3 Funktionen können als "Bauanleitung" für neue Objekte dienen.
+
+// Da wir eine Funktion nur als "Bauanleitung" verwenden, sollten wir nicht den
+// Funktionsnamen mit Attributen und spezifischen Werten erweitern.
+
 // JavaScript bietet dafür das Signalwort 'this' an.
 // 'this' existiert nur in der Funktion bzw. "Bauanleitung"
 

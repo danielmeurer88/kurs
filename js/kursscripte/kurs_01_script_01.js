@@ -65,7 +65,7 @@ var object = {
 
 object.text5 = "In Javascript koennen Objekte ganz einfach erweitert werden";
 
-// ARRAYS (dt. Felder) sind spezielle Objekte
+// ARRAYS (dt. Felder) sind in JavaScript spezielle Objekte
 
 var array = [
 	12,
@@ -73,7 +73,9 @@ var array = [
 	true
 ];
 
-// Ein Array ist nichts anderes als ein Objekt, aber statt Attributnamen haben sie eine Zahl; angefangen bei 0
+// Ein Array ist nichts anderes als ein Objekt, aber ein Attribut (bzw. Element)
+// brauch keinen Namen, intern wird eine Zahl verwendet, die mit 0 anfängt und
+// stets um 1 inkrementiert wird
 
 array[0]; // ist die Zahl 12
 array[1]; // ist der String "text"
@@ -84,17 +86,19 @@ array[3] = "Arrays koennen wie Objekte ganz einfach erweitert werden";
 // Besonderer Zugriff auf die Attribute durch []
 // Funktioniert auch mit normalen Objekten
 
+// object-variable von weiter oben
 object["zahl1"] = array[0] * 4 + abc / 3;
 
 // 4. FUNKTIONEN (Part 1)
-// jede Programmiersprache besitzt Funktionen, um eine definierte Aufgabe zu erledigen.
-//In JavaScript Signalwort 'function ' + name + () + {}
+// jede Programmiersprache besitzt Funktionen
 
+
+//In JavaScript, Signalwort 'function ' + name + () + {}
 function funktion(){
-	// geschweifte Klammern umranden den Funktionskörper
-	
-	//das 5. Element des Arrays 'array' bekommt den Wert, der im Attribut 'zahl1' des Objekts 'object' gespeichert ist, zugewiesen 
-	array[4] = object.zahl1;
+    // geschweifte Klammern umranden den Funktionskörper
+
+    //das 5. Element des Arrays 'array' bekommt den Wert, der im Attribut 'zahl1' des Objekts 'object' gespeichert ist, zugewiesen 
+    array[4] = object.zahl1;
 }
 
 // Funktionen sind eine Anreihung von Anweisungen, die erst ausgeführt werden, wenn die Funktion aufgerufen wird.
