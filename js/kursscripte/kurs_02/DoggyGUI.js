@@ -314,18 +314,22 @@ DoggyGUI.prototype._log = function (txt, header) {
     this.Log.push({txt:txt, header:header});
     var con = this.Engine.GetOutsideElement("console");
     if(con){
-        con.append("<p class='line line{0}'>{1}</p>".format(header, txt));
+		var p = "<p class='line line{0}'>{1}</p>".format(header, txt);
+		var div = document.createElement("div");
+		div.innerHTML = p;
+		p = div.children[0];
+        con[0].append(p);
 
         var height = con.height();
         var scroll = 0;
-        var content = con.contents();
+        var content = con[0].children;
         var el;
         for(var i=0; i<content.length; i++){
             el = content[i];
-            scroll += $(el).outerHeight(true);
+            scroll += 50;
         }
         scroll = (scroll-height < 0) ? 0 : scroll-height;
-        con.scrollTop(scroll);
+        con[0].windowTop = (scroll);
     }
 };
 /**
